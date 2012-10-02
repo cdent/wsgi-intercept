@@ -1,3 +1,4 @@
+import py.test
 from wsgi_intercept.httplib2_intercept import install, uninstall
 import wsgi_intercept
 from test import wsgi_app
@@ -45,5 +46,37 @@ def test_more_interesting():
     assert internal_env['PATH_INFO'] == '/%E4%B8%96%E4%B8%8A%E5%8E%9F%E4%BE%86%E9%82%84%E6%9C%89%E3%80%8C%E7%BE%9A%E7%89%9B%E3%80%8D%E9%80%99%E7%A8%AE%E5%8B%95%E7%89%A9%EF%BC%81%2Fbarney'
     assert internal_env['QUERY_STRING'] == 'bar=baz%20zoom'
     assert internal_env['HTTP_ACCEPT'] == 'application/json'
+
+    http_uninstall()
+
+def test_script_name():
+    http_install()
+    wsgi_intercept.add_wsgi_intercept(
+            'some_hopefully_nonexistant_domain', 80,
+            wsgi_app.create_mi, script_name='/funky')
+
+    http = httplib2.Http()
+    response, content = http.request('http://some_hopefully_nonexistant_domain/funky/boom/baz', 'GET')
+    internal_env = wsgi_app.get_internals()
+
+    assert internal_env['SCRIPT_NAME'] == '/funky'
+    assert internal_env['PATH_INFO'] == '/boom/baz'
+
+    http_uninstall()
+
+def test_encoding_errors():
+    """
+    This error is actually happening before we get to wsgi_intercept.
+    """
+    http_install()
+    wsgi_intercept.add_wsgi_intercept(
+            'some_hopefully_nonexistant_domain', 80,
+            wsgi_app.create_mi)
+
+    http = httplib2.Http()
+    with py.test.raises(UnicodeEncodeError):
+        response, content = http.request(
+                'http://some_hopefully_nonexistant_domain/boom/baz', 'GET',
+                headers={'Accept': 'application/\u2603'})
 
     http_uninstall()

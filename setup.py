@@ -42,7 +42,8 @@ setup(
     author = 'Titus Brown, Kumar McMillan, Chris Dent',
     author_email = 'cdent@peermore.com',
     description = description,
-    url="http://pypi.python.org/pypi/wsgi_intercept",
+    # What will the name be?
+    #url="http://pypi.python.org/pypi/wsgi_intercept",
     long_description = long_description,
     license = 'MIT License',
     packages = find_packages(),
