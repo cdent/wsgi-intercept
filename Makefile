@@ -1,3 +1,4 @@
+.PHONY: test clean
 
 clean:
 	find wsgi_intercept -name "*.pyc" |xargs rm || true
@@ -7,3 +8,5 @@ clean:
 	rm *.bundle || true
 	rm -r *-bundle* || true
 
+test:
+	py.test -sx test
