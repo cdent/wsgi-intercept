@@ -1,6 +1,8 @@
 python3-wsgi-intercept
 ======================
 
+[![travis](https://secure.travis-ci.org/cdent/python3-wsgi-intercept.png)](https://secure.travis-ci.org/cdent/python3-wsgi-intercept)
+
 Python3 port of the important bits of wsgi-intercept
 
 What is it?
