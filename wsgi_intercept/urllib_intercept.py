@@ -3,6 +3,7 @@ from wsgi_intercept import WSGI_HTTPConnection, WSGI_HTTPSConnection
 import urllib.request
 from urllib.request import HTTPHandler, HTTPSHandler
 
+
 class WSGI_HTTPHandler(HTTPHandler):
     """
     Override the default HTTPHandler class with one that uses the
@@ -11,7 +12,7 @@ class WSGI_HTTPHandler(HTTPHandler):
     def http_open(self, req):
         return self.do_open(WSGI_HTTPConnection, req)
 
-    
+
 class WSGI_HTTPSHandler(HTTPSHandler):
     """
     Override the default HTTPSHandler class with one that uses the
@@ -19,7 +20,8 @@ class WSGI_HTTPSHandler(HTTPSHandler):
     """
     def https_open(self, req):
         return self.do_open(WSGI_HTTPSConnection, req)
-    
+
+
 def install_opener():
     handlers = [WSGI_HTTPHandler()]
     if WSGI_HTTPSHandler is not None:
@@ -28,6 +30,7 @@ def install_opener():
     urllib.request.install_opener(opener)
 
     return opener
+
 
 def uninstall_opener():
     urllib.request.install_opener(None)

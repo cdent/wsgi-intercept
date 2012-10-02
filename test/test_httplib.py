@@ -11,16 +11,21 @@ _saved_debuglevel = None
 def http_install(port=80):
     _saved_debuglevel, wsgi_intercept.debuglevel = wsgi_intercept.debuglevel, 1
     httplib_intercept.install()
-    wsgi_intercept.add_wsgi_intercept('some_hopefully_nonexistant_domain', port, wsgi_app.create_fn)
+    wsgi_intercept.add_wsgi_intercept(
+            'some_hopefully_nonexistant_domain', port, wsgi_app.create_fn)
+
 
 def http_uninstall(port=80):
     wsgi_intercept.debuglevel = _saved_debuglevel
-    wsgi_intercept.remove_wsgi_intercept('some_hopefully_nonexistant_domain', port)
+    wsgi_intercept.remove_wsgi_intercept(
+            'some_hopefully_nonexistant_domain', port)
     httplib_intercept.uninstall()
+
 
 def test_http_success():
     http_install()
-    http_client = http.client.HTTPConnection('some_hopefully_nonexistant_domain')
+    http_client = http.client.HTTPConnection(
+            'some_hopefully_nonexistant_domain')
     http_client.request('GET', '/')
     content = http_client.getresponse().read()
     assert content == b'WSGI intercept successful!\n'
@@ -33,7 +38,8 @@ def test_http_success():
 @pytest.mark.xfail
 def test_https_success():
     http_install(443)
-    http_client = http.client.HTTPSConnection('some_hopefully_nonexistant_domain')
+    http_client = http.client.HTTPSConnection(
+            'some_hopefully_nonexistant_domain')
     http_client.request('GET', '/')
     content = http_client.getresponse().read()
     assert content == b'WSGI intercept successful!\n'

@@ -4,14 +4,28 @@
 Introduction
 ============
 
-Testing a WSGI application normally involves starting a server at a local host and port, then pointing your test code to that address.  Instead, this library lets you intercept calls to any specific host/port combination and redirect them into a `WSGI application`_ importable by your test program.  Thus, you can avoid spawning multiple processes or threads to test your Web app.
+Testing a WSGI application normally involves starting a server at a
+local host and port, then pointing your test code to that address.
+Instead, this library lets you intercept calls to any specific host/port
+combination and redirect them into a `WSGI application`_ importable by
+your test program. Thus, you can avoid spawning multiple processes or
+threads to test your Web app.
 
 How Does It Work?
 =================
 
-``wsgi_intercept`` works by replacing ``httplib.HTTPConnection`` with a subclass, ``wsgi_intercept.WSGI_HTTPConnection``.  This class then redirects specific server/port combinations into a WSGI application by emulating a socket.  If no intercept is registered for the host and port requested, those requests are passed on to the standard handler.
+``wsgi_intercept`` works by replacing ``httplib.HTTPConnection`` with a
+subclass, ``wsgi_intercept.WSGI_HTTPConnection``. This class then
+redirects specific server/port combinations into a WSGI application by
+emulating a socket. If no intercept is registered for the host and port
+requested, those requests are passed on to the standard handler.
 
-The functions ``add_wsgi_intercept(host, port, app_create_fn, script_name='')`` and ``remove_wsgi_intercept(host,port)`` specify which URLs should be redirect into what applications.  Note especially that ``app_create_fn`` is a *function object* returning a WSGI application; ``script_name`` becomes ``SCRIPT_NAME`` in the WSGI app's environment, if set.
+The functions ``add_wsgi_intercept(host, port, app_create_fn,
+script_name='')`` and ``remove_wsgi_intercept(host,port)`` specify
+which URLs should be redirect into what applications. Note especially
+that ``app_create_fn`` is a *function object* returning a WSGI
+application; ``script_name`` becomes ``SCRIPT_NAME`` in the WSGI app's
+environment, if set.
 
 Install
 =======
@@ -23,7 +37,9 @@ Install
 Packages Intercepted
 ====================
 
-Unfortunately each of the Web testing frameworks uses its own specific mechanism for making HTTP call-outs, so individual implementations are needed.  Below are the packages supported and how to create an intercept.
+Unfortunately each of the Web testing frameworks uses its own specific
+mechanism for making HTTP call-outs, so individual implementations are
+needed. Below are the packages supported and how to create an intercept.
 
 urllib.request
 -------
@@ -47,7 +63,7 @@ urllib.request handler: ::
 httplib2
 --------
 
-httplib2_ is a 3rd party extension of the built-in ``httplib``.  To intercept 
+httplib2_ is a 3rd party extension of the built-in ``httplib``.  To intercept
 requests, it is similar to urllib::
 
     >>> from wsgi_intercept.httplib2_intercept import install
@@ -56,7 +72,7 @@ requests, it is similar to urllib::
     >>> from wsgi_intercept.test_wsgi_app import create_fn
     >>> wsgi_intercept.add_wsgi_intercept('some_host', 80, create_fn)
     >>> import httplib2
-    >>> resp, content = httplib2.Http().request('http://some_host:80/', 'GET') 
+    >>> resp, content = httplib2.Http().request('http://some_host:80/', 'GET')
     >>> content
     'WSGI intercept successful!\\n'
 
@@ -68,11 +84,11 @@ requests, it is similar to urllib::
 History
 =======
 
-Pursuant to Ian Bicking's `"best Web testing framework"`_ post,
-Titus Brown put together an `in-process HTTP-to-WSGI interception mechanism`_ for
-his own Web testing system, twill_.  Because the mechanism is pretty
-generic -- it works at the httplib level -- Titus decided to try adding it into
-all of the *other* Python Web testing frameworks.
+Pursuant to Ian Bicking's `"best Web testing framework"`_ post, Titus
+Brown put together an `in-process HTTP-to-WSGI interception mechanism`_
+for his own Web testing system, twill_. Because the mechanism is pretty
+generic -- it works at the httplib level -- Titus decided to try adding
+it into all of the *other* Python Web testing frameworks.
 
 This is the result.
 
@@ -84,7 +100,8 @@ This is the result.
 Project Home
 ============
 
-This project lives on `GitHub`_. Please submit all bugs, patches, failing tests, et cetera using the Issue Tracker.
+This project lives on `GitHub`_. Please submit all bugs, patches,
+failing tests, et cetera using the Issue Tracker.
 
 .. _GitHub: http://github.com/cdent/python3-wsgi-intercept
 
@@ -116,6 +133,7 @@ debuglevel = 0
 
 _wsgi_intercept = {}
 
+
 def add_wsgi_intercept(host, port, app_create_fn, script_name=''):
     """
     Add a WSGI intercept call for host:port, using the app returned
@@ -123,17 +141,20 @@ def add_wsgi_intercept(host, port, app_create_fn, script_name=''):
     """
     _wsgi_intercept[(host, port)] = (app_create_fn, script_name)
 
+
 def remove_wsgi_intercept(*args):
     """
-    Remove the WSGI intercept call for (host, port).  If no arguments are given, removes all intercepts
+    Remove the WSGI intercept call for (host, port).  If no arguments are
+    given, removes all intercepts
     """
     global _wsgi_intercept
-    if len(args)==0:
+    if len(args) == 0:
         _wsgi_intercept = {}
     else:
         key = (args[0], args[1])
         if key in _wsgi_intercept:
             del _wsgi_intercept[key]
+
 
 #
 # make_environ: behave like a Web server.  Take in 'input', and behave
@@ -142,7 +163,6 @@ def remove_wsgi_intercept(*args):
 #
 # This is where the magic happens, folks.
 #
-
 def make_environ(inp, host, port, script_name):
     """
     Take 'inp' as if it were HTTP-speak being received on host:port,
@@ -157,14 +177,14 @@ def make_environ(inp, host, port, script_name):
     #
 
     environ = {}
-    
+
     method_line = inp.readline()
     method_line = method_line.decode('ISO-8859-1')
-    
+
     content_type = None
     content_length = None
     cookies = []
-    
+
     for line in inp:
         if not line.strip():
             break
@@ -189,7 +209,7 @@ def make_environ(inp, host, port, script_name):
             h = k.upper()
             h = h.replace(b'-', b'_')
             environ['HTTP_' + h.decode('ISO-8859-1')] = v
-            
+
         if debuglevel >= 2:
             print('HEADER:', k, v)
 
@@ -199,7 +219,7 @@ def make_environ(inp, host, port, script_name):
 
     if debuglevel >= 2:
         print('METHOD LINE:', method_line)
-        
+
     method, url, protocol = method_line.split(' ')
 
     # clean the script_name off of the url, if it's there.
@@ -224,23 +244,24 @@ def make_environ(inp, host, port, script_name):
     #
     # fill out our dictionary.
     #
-    
-    environ.update({ "wsgi.version" : (1,0),
-                     "wsgi.url_scheme": "http",
-                     "wsgi.input" : inp,           # to read for POSTs
-                     "wsgi.errors" : BytesIO(),
-                     "wsgi.multithread" : 0,
-                     "wsgi.multiprocess" : 0,
-                     "wsgi.run_once" : 0,
-    
-                     "PATH_INFO" : path_info,
-                     "REMOTE_ADDR" : '127.0.0.1',
-                     "REQUEST_METHOD" : method,
-                     "SCRIPT_NAME" : script_name,
-                     "SERVER_NAME" : host,
-                     "SERVER_PORT" : port,
-                     "SERVER_PROTOCOL" : protocol,
-                     })
+
+    environ.update({
+        "wsgi.version": (1, 0),
+        "wsgi.url_scheme": "http",
+        "wsgi.input": inp,  # to read for POSTs
+        "wsgi.errors": BytesIO(),
+        "wsgi.multithread": 0,
+        "wsgi.multiprocess": 0,
+        "wsgi.run_once": 0,
+
+        "PATH_INFO": path_info,
+        "REMOTE_ADDR": '127.0.0.1',
+        "REQUEST_METHOD": method,
+        "SCRIPT_NAME": script_name,
+        "SERVER_NAME": host,
+        "SERVER_PORT": port,
+        "SERVER_PROTOCOL": protocol,
+    })
 
     #
     # query_string, content_type & length are optional.
@@ -248,7 +269,7 @@ def make_environ(inp, host, port, script_name):
 
     if query_string:
         environ['QUERY_STRING'] = query_string
-        
+
     if content_type:
         environ['CONTENT_TYPE'] = content_type
         if debuglevel >= 2:
@@ -269,16 +290,16 @@ def make_environ(inp, host, port, script_name):
 
     return environ
 
+
 #
 # fake socket for WSGI intercept stuff.
 #
-
 class wsgi_fake_socket:
     """
     Handle HTTP traffic and stuff into a WSGI application object instead.
 
     Note that this class assumes:
-    
+
      1. 'makefile' is called (by the response class) only after all of the
         data has been sent to the socket by the request class;
      2. non-persistent (i.e. non-HTTP/1.1) connections.
@@ -298,7 +319,7 @@ class wsgi_fake_socket:
         """
         'makefile' is called by the HTTPResponse class once all of the
         data has been written.  So, in this interceptor class, we need to:
-        
+
           1. build a start_response function that grabs all the headers
              returned by the WSGI app;
           2. create a wsgi.input file object 'inp', containing all of the
@@ -316,7 +337,7 @@ class wsgi_fake_socket:
         def start_response(status, headers, exc_info=None):
             # construct the HTTP request.
             self.output.write(b"HTTP/1.0 " + status.encode('utf-8') + b"\n")
-            
+
             for k, v in headers:
                 try:
                     k = k.encode('utf-8')
@@ -371,15 +392,15 @@ class wsgi_fake_socket:
                 while 1:
                     data = next(self.result)
                     self.output.write(data)
-                    
+
         except StopIteration:
             pass
 
         if hasattr(app_result, 'close'):
             app_result.close()
-            
+
         if debuglevel >= 2:
-            print( "***", self.output.getvalue(), "***")
+            print("***", self.output.getvalue(), "***")
 
         # return the concatenated results.
         return BytesIO(self.output.getvalue())
@@ -396,15 +417,14 @@ class wsgi_fake_socket:
         except TypeError:
             self.inp.write(bytes([str]).decode('utf-8'))
 
-
     def close(self):
         "Do nothing, for now."
         pass
 
+
 #
 # WSGI_HTTPConnection
 #
-
 class WSGI_HTTPConnection(HTTPConnection):
     """
     Intercept all traffic to certain hosts & redirect into a WSGI
@@ -417,35 +437,35 @@ class WSGI_HTTPConnection(HTTPConnection):
         key = (host, int(port))
 
         app, script_name = None, None
-        
+
         if key in _wsgi_intercept:
             (app_fn, script_name) = _wsgi_intercept[key]
             app = app_fn()
 
-        return app, script_name        
-    
+        return app, script_name
+
     def connect(self):
         """
         Override the connect() function to intercept calls to certain
         host/ports.
-        
-        If no app at host/port has been registered for interception then 
+
+        If no app at host/port has been registered for interception then
         a normal HTTPConnection is made.
         """
         if debuglevel:
             sys.stderr.write('connect: %s, %s\n' % (self.host, self.port,))
-                             
+
         try:
             (app, script_name) = self.get_app(self.host, self.port)
             if app:
                 if debuglevel:
-                    sys.stderr.write('INTERCEPTING call to %s:%s\n' % \
+                    sys.stderr.write('INTERCEPTING call to %s:%s\n' %
                                      (self.host, self.port,))
                 self.sock = wsgi_fake_socket(app, self.host, self.port,
                                              script_name)
             else:
                 HTTPConnection.connect(self)
-                
+
         except Exception as e:
             if debuglevel:              # intercept & print out tracebacks
                 traceback.print_exc()
@@ -470,39 +490,38 @@ else:
             Return the app object for the given (host, port).
             """
             key = (host, int(port))
-    
+
             app, script_name = None, None
-            
+
             if key in _wsgi_intercept:
                 (app_fn, script_name) = _wsgi_intercept[key]
                 app = app_fn()
-    
-            return app, script_name        
-        
+
+            return app, script_name
+
         def connect(self):
             """
             Override the connect() function to intercept calls to certain
             host/ports.
-            
-            If no app at host/port has been registered for interception then 
+
+            If no app at host/port has been registered for interception then
             a normal HTTPSConnection is made.
             """
             if debuglevel:
                 sys.stderr.write('connect: %s, %s\n' % (self.host, self.port,))
-                                 
+
             try:
                 (app, script_name) = self.get_app(self.host, self.port)
                 if app:
                     if debuglevel:
-                        sys.stderr.write('INTERCEPTING call to %s:%s\n' % \
+                        sys.stderr.write('INTERCEPTING call to %s:%s\n' %
                                          (self.host, self.port,))
                     self.sock = wsgi_fake_socket(app, self.host, self.port,
                                                  script_name)
                 else:
                     HTTPSConnection.connect(self)
-                    
+
             except Exception as e:
                 if debuglevel:              # intercept & print out tracebacks
                     traceback.print_exc()
                 raise
-
