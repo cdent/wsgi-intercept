@@ -1,5 +1,5 @@
 import pytest
-from wsgi_intercept import httplib_intercept
+from wsgi_intercept import http_client_intercept
 from socket import gaierror
 import wsgi_intercept
 from test import wsgi_app
@@ -10,7 +10,7 @@ _saved_debuglevel = None
 
 def http_install(port=80):
     _saved_debuglevel, wsgi_intercept.debuglevel = wsgi_intercept.debuglevel, 1
-    httplib_intercept.install()
+    http_client_intercept.install()
     wsgi_intercept.add_wsgi_intercept(
             'some_hopefully_nonexistant_domain', port, wsgi_app.create_fn)
 
@@ -19,7 +19,7 @@ def http_uninstall(port=80):
     wsgi_intercept.debuglevel = _saved_debuglevel
     wsgi_intercept.remove_wsgi_intercept(
             'some_hopefully_nonexistant_domain', port)
-    httplib_intercept.uninstall()
+    http_client_intercept.uninstall()
 
 
 def test_http_success():
