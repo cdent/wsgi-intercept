@@ -37,8 +37,7 @@ New Version
 -----------
 
 For the new version only basic intercept functionality will be
-provided, with a working implementation for urllib.request. Other
-testing tools will be supported through a plugin system. The first
-supported plugin will be httplib2.
+provided, with a working implementation for urllib.request, httplib
+and httplib2. Other  frameworks later.
 
 
