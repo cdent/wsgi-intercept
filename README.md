@@ -42,4 +42,8 @@ For the new version only basic intercept functionality will be
 provided, with a working implementation for urllib.request, httplib
 and httplib2. Other  frameworks later.
 
+To Do
+-----
 
+* https support using http.client is not currently working because of
+  issues with recursive calls after the class is overridden.
