@@ -16,7 +16,7 @@ def simple_app(environ, start_response):
     global _app_was_hit
     _app_was_hit = True
     
-    return ['WSGI intercept successful!\n']
+    return [b'WSGI intercept successful!\n']
 
 def create_fn():
     global _app_was_hit

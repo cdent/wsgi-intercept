@@ -116,7 +116,7 @@ debuglevel = 0
 
 _wsgi_intercept = {}
 
-def add_wsgi_intercept(host, port, app_create_fn, script_name=b''):
+def add_wsgi_intercept(host, port, app_create_fn, script_name=''):
     """
     Add a WSGI intercept call for host:port, using the app returned
     by app_create_fn with a SCRIPT_NAME of 'script_name' (default '').
@@ -132,7 +132,7 @@ def remove_wsgi_intercept(*args):
         _wsgi_intercept = {}
     else:
         key = (args[0], args[1])
-        if _wsgi_intercept.has_key(key):
+        if key in _wsgi_intercept:
             del _wsgi_intercept[key]
 
 #
@@ -159,6 +159,7 @@ def make_environ(inp, host, port, script_name):
     environ = {}
     
     method_line = inp.readline()
+    method_line = method_line.decode('ISO-8859-1')
     
     content_type = None
     content_length = None
@@ -171,6 +172,7 @@ def make_environ(inp, host, port, script_name):
         print('line', line)
         k, v = line.strip().split(b':', 1)
         v = v.lstrip()
+        v = v.decode('ISO-8859-1')
 
         #
         # take care of special headers, and for the rest, put them
@@ -186,7 +188,7 @@ def make_environ(inp, host, port, script_name):
         else:
             h = k.upper()
             h = h.replace(b'-', b'_')
-            environ['HTTP_' + h.decode()] = v
+            environ['HTTP_' + h.decode('ISO-8859-1')] = v
             
         if debuglevel >= 2:
             print('HEADER:', k, v)
@@ -198,7 +200,7 @@ def make_environ(inp, host, port, script_name):
     if debuglevel >= 2:
         print('METHOD LINE:', method_line)
         
-    method, url, protocol = method_line.split(b' ')
+    method, url, protocol = method_line.split(' ')
 
     # clean the script_name off of the url, if it's there.
     if not url.startswith(script_name):
@@ -206,7 +208,7 @@ def make_environ(inp, host, port, script_name):
     else:
         url = url[len(script_name):]
 
-    url = url.split(b'?', 1)
+    url = url.split('?', 1)
     path_info = url[0]
     query_string = ""
     if len(url) == 2:
@@ -232,12 +234,11 @@ def make_environ(inp, host, port, script_name):
                      "wsgi.run_once" : 0,
     
                      "PATH_INFO" : path_info,
-                     "QUERY_STRING" : query_string,
                      "REMOTE_ADDR" : '127.0.0.1',
                      "REQUEST_METHOD" : method,
                      "SCRIPT_NAME" : script_name,
                      "SERVER_NAME" : host,
-                     "SERVER_PORT" : str(port),
+                     "SERVER_PORT" : port,
                      "SERVER_PROTOCOL" : protocol,
                      })
 
@@ -351,9 +352,6 @@ class wsgi_fake_socket:
         # the generator data.  this is because the 'write' fn doesn't
         # necessarily get called until the first result is requested from
         # the app function.
-        #
-        # see twill tests, 'test_wrapper_intercept' for a test that breaks
-        # if this is done incorrectly.
 
         try:
             generator_data = None
@@ -365,7 +363,10 @@ class wsgi_fake_socket:
                     self.output.write(data)
 
             if generator_data:
-                self.output.write(generator_data)
+                try:
+                    self.output.write(generator_data)
+                except TypeError as exc:
+                    raise TypeError('bytes required in response: %s' % exc)
 
                 while 1:
                     data = next(self.result)
