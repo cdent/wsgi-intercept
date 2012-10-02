@@ -473,7 +473,7 @@ else:
     
             app, script_name = None, None
             
-            if _wsgi_intercept.has_key(key):
+            if key in _wsgi_intercept:
                 (app_fn, script_name) = _wsgi_intercept[key]
                 app = app_fn()
     
