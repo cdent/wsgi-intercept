@@ -189,7 +189,6 @@ def make_environ(inp, host, port, script_name):
         if not line.strip():
             break
 
-        print('line', line)
         k, v = line.strip().split(b':', 1)
         v = v.lstrip()
         v = v.decode('ISO-8859-1')

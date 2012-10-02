@@ -30,34 +30,20 @@ def test_simple_override():
     http_uninstall()
 
 
-def test_quoting_issue11():
+def test_more_interesting():
     http_install()
-    # see http://code.google.com/p/wsgi-intercept/issues/detail?id=11
-    http = httplib2.Http()
-    inspected_env = {}
-
-    def make_path_checking_app():
-
-        def path_checking_app(environ, start_response):
-            inspected_env['QUERY_STRING'] = environ['QUERY_STRING']
-            inspected_env['PATH_INFO'] = environ['PATH_INFO']
-            status = '200 OK'
-            response_headers = [('Content-type', 'text/plain')]
-            start_response(status, response_headers)
-            return []
-
-        return path_checking_app
-
     wsgi_intercept.add_wsgi_intercept(
             'some_hopefully_nonexistant_domain', 80,
-            make_path_checking_app)
+            wsgi_app.create_mi)
 
-    resp, content = http.request(
-            'http://some_hopefully_nonexistant_domain:80/spaced+words.html?word=something%20spaced',
-            'GET')
+    http = httplib2.Http()
+    resp, content = http.request('http://some_hopefully_nonexistant_domain/%E4%B8%96%E4%B8%8A%E5%8E%9F%E4%BE%86%E9%82%84%E6%9C%89%E3%80%8C%E7%BE%9A%E7%89%9B%E3%80%8D%E9%80%99%E7%A8%AE%E5%8B%95%E7%89%A9%EF%BC%81%2Fbarney?bar=baz%20zoom',
+            'GET',
+            headers={'Accept': 'application/json'})
+    internal_env = wsgi_app.get_internals()
 
-    assert ('QUERY_STRING' in inspected_env and 'PATH_INFO'
-            in inspected_env), "path_checking_app() was never called?"
-    assert inspected_env['PATH_INFO'] == '/spaced+words.html'
-    assert inspected_env['QUERY_STRING'] == 'word=something%20spaced'
+    assert internal_env['PATH_INFO'] == '/%E4%B8%96%E4%B8%8A%E5%8E%9F%E4%BE%86%E9%82%84%E6%9C%89%E3%80%8C%E7%BE%9A%E7%89%9B%E3%80%8D%E9%80%99%E7%A8%AE%E5%8B%95%E7%89%A9%EF%BC%81%2Fbarney'
+    assert internal_env['QUERY_STRING'] == 'bar=baz%20zoom'
+    assert internal_env['HTTP_ACCEPT'] == 'application/json'
+
     http_uninstall()
