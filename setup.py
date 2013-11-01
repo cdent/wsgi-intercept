@@ -14,7 +14,7 @@ META = {
     'packages': find_packages(),
     'extras_require': {
         'testing': [
-            'pytest',
+            'pytest>=2.4',
             'httplib2',
             'requests'
         ],
