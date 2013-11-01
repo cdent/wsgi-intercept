@@ -477,14 +477,16 @@ class WSGI_HTTPConnection(HTTPConnection):
             else:
                 HTTPConnection.connect(self)
 
-        except Exception as e:
+        except Exception:
             if debuglevel:              # intercept & print out tracebacks
                 traceback.print_exc()
             raise
 
+
 #
 # WSGI_HTTPSConnection
 #
+
 
 class WSGI_HTTPSConnection(HTTPSConnection, WSGI_HTTPConnection):
     """
@@ -527,7 +529,7 @@ class WSGI_HTTPSConnection(HTTPSConnection, WSGI_HTTPConnection):
             else:
                 HTTPSConnection.connect(self)
 
-        except Exception as e:
+        except Exception:
             if debuglevel:              # intercept & print out tracebacks
                 traceback.print_exc()
             raise

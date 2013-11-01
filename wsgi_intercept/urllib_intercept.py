@@ -4,11 +4,6 @@ try:
 except ImportError:
     import urllib2 as url_lib
 
-try:
-    from urllib.request import HTTPHandler, HTTPSHandler
-except ImportError:
-    from urllib2 import HTTPHandler, HTTPSHandler
-
 from . import WSGI_HTTPConnection, WSGI_HTTPSConnection
 
 

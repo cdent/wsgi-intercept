@@ -9,4 +9,4 @@ clean:
 	rm -r *-bundle* || true
 
 test:
-	py.test -x test
+	py.test --tb=short -x test

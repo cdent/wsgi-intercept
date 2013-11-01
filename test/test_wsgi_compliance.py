@@ -1,3 +1,5 @@
+
+import sys
 import py.test
 from wsgi_intercept.httplib2_intercept import install, uninstall
 import wsgi_intercept
@@ -44,6 +46,7 @@ def test_more_interesting():
 
     http_uninstall()
 
+
 def test_script_name():
     http_install()
     wsgi_intercept.add_wsgi_intercept(
@@ -59,10 +62,10 @@ def test_script_name():
 
     http_uninstall()
 
+
+@py.test.mark.skipif(sys.version_info[0] == 3 and sys.version_info[1] <= 2,
+        reason='unicode literals needed for this test')
 def test_encoding_errors():
-    """
-    This error is actually happening before we get to wsgi_intercept.
-    """
     http_install()
     wsgi_intercept.add_wsgi_intercept(
             'some_hopefully_nonexistant_domain', 80,

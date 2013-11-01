@@ -1,4 +1,3 @@
-import pytest
 try:
     import urllib.request as url_lib
 except ImportError:

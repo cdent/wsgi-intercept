@@ -5,7 +5,6 @@ import wsgi_intercept
 from test import wsgi_app
 import requests
 
-import sys
 import py.test
 
 
@@ -30,7 +29,6 @@ def test_success():
 
 def test_bogus_domain():
     install()
-    resp = requests.get('http://some_hopefully_nonexistant_domain:80/')
     py.test.raises(ConnectionError,
             'requests.get("http://_nonexistant_domain_")')
     uninstall()
