@@ -5,18 +5,13 @@ from test import wsgi_app
 import httplib2
 
 
-_saved_debuglevel = None
-
-
 def http_install():
-    _saved_debuglevel, wsgi_intercept.debuglevel = wsgi_intercept.debuglevel, 1
     install()
     wsgi_intercept.add_wsgi_intercept(
             'some_hopefully_nonexistant_domain', 80, wsgi_app.create_fn)
 
 
 def http_uninstall():
-    wsgi_intercept.debuglevel = _saved_debuglevel
     wsgi_intercept.remove_wsgi_intercept(
             'some_hopefully_nonexistant_domain', 80)
     uninstall()
@@ -77,6 +72,6 @@ def test_encoding_errors():
     with py.test.raises(UnicodeEncodeError):
         response, content = http.request(
                 'http://some_hopefully_nonexistant_domain/boom/baz', 'GET',
-                headers={'Accept': 'application/\u2603'})
+                headers={'Accept': u'application/\u2603'})
 
     http_uninstall()

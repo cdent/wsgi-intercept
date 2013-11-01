@@ -7,11 +7,7 @@ import httplib2
 import py.test
 
 
-_saved_debuglevel = None
-
-
 def install(port=80):
-    _saved_debuglevel, wsgi_intercept.debuglevel = wsgi_intercept.debuglevel, 1
     httplib2_intercept.install()
     wsgi_intercept.add_wsgi_intercept(
             'some_hopefully_nonexistant_domain',
@@ -19,7 +15,6 @@ def install(port=80):
 
 
 def uninstall():
-    wsgi_intercept.debuglevel = _saved_debuglevel
     httplib2_intercept.uninstall()
 
 
@@ -35,7 +30,6 @@ def test_success():
 
 def test_bogus_domain():
     install()
-    wsgi_intercept.debuglevel = 1
     py.test.raises(gaierror,
             'httplib2_intercept.HTTP_WSGIInterceptorWithTimeout("_nonexistant_domain_").connect()')
     uninstall()

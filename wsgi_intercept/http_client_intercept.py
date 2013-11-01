@@ -8,20 +8,42 @@
 # XXX: HTTPSConnection is currently not allowed as attempting
 # to override it causes a recursion error.
 
-import http.client
-import wsgi_intercept
-import sys
-from http.client import (
-    HTTPConnection as OriginalHTTPConnection,
-    #HTTPSConnection as OriginalHTTPSConnection
-)
+SKIP_SSL = False
+
+try:
+    import http.client as http_lib
+    SKIP_SSL = True
+except ImportError:
+    import httplib as http_lib
+
+from . import WSGI_HTTPConnection, WSGI_HTTPSConnection
+
+try:
+    from http.client import (
+            HTTPConnection as OriginalHTTPConnection,
+            HTTPSConnection as OriginalHTTPSConnection
+    )
+except ImportError:
+    from httplib import (
+            HTTPConnection as OriginalHTTPConnection,
+            HTTPSConnection as OriginalHTTPSConnection
+    )
+
+
+class Error_HTTPSConnection(object):
+
+    def __init__(self, *args, **kwargs):
+        raise NotImplementedError('HTTPS temporarily not implemented')
 
 
 def install():
-    http.client.HTTPConnection = wsgi_intercept.WSGI_HTTPConnection
-    #http.client.HTTPSConnection = wsgi_intercept.WSGI_HTTPSConnection
+    http_lib.HTTPConnection = WSGI_HTTPConnection
+    if SKIP_SSL:
+        http_lib.HTTPSConnection = Error_HTTPSConnection
+    else:
+        http_lib.HTTPSConnection = WSGI_HTTPSConnection
 
 
 def uninstall():
-    http.client.HTTPConnection = OriginalHTTPConnection
-    #http.client.HTTPSConnection = OriginalHTTPSConnection
+    http_lib.HTTPConnection = OriginalHTTPConnection
+    http_lib.HTTPSConnection = OriginalHTTPSConnection

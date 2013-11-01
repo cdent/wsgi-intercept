@@ -4,6 +4,11 @@ Simple WSGI applications for testing.
 
 from pprint import pformat
 
+try:
+    bytes
+except ImportError:
+    bytes = str
+
 
 _app_was_hit = False
 _internals = {}
@@ -46,4 +51,4 @@ def more_interesting_app(environ, start_response):
     _internals = environ
 
     start_response('200 OK', [('Content-type', 'text/plain')])
-    return [bytes(pformat(environ), encoding='utf-8')]
+    return [pformat(environ).encode('utf-8')]
