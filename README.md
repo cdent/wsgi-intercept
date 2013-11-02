@@ -3,7 +3,8 @@ python3-wsgi-intercept
 
 [![travis](https://secure.travis-ci.org/cdent/python3-wsgi-intercept.png)](https://secure.travis-ci.org/cdent/python3-wsgi-intercept)
 
-Python3 port of the important bits of wsgi-intercept
+Python3 port of the important bits of wsgi-intercept, now working for
+2.6, 2.7 and 3.3.
 
 What is it?
 ===========
@@ -12,9 +13,6 @@ wsgi_intercept installs a WSGI application in place of a real URI for testing.
 
 Introduction
 ------------
-
-_This content is from the python2 version. It will be updated if
-changes are made._
 
 Testing a WSGI application normally involves starting a server at a
 local host and port, then pointing your test code to that address.
@@ -39,11 +37,11 @@ New Version
 -----------
 
 For the new version only basic intercept functionality will be
-provided, with a working implementation for urllib.request, httplib
-and httplib2. Other  frameworks later.
+provided, with a working implementation for `urllib2`/`urllib.request`,
+`httplib`/`http.client`, `httplib2` and `requests`.
 
 To Do
 -----
 
-* https support using http.client is not currently working because of
+* https support using `http.client` is not currently working because of
   issues with recursive calls after the class is overridden.

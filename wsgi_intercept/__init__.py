@@ -39,47 +39,16 @@ Packages Intercepted
 
 Unfortunately each of the Web testing frameworks uses its own specific
 mechanism for making HTTP call-outs, so individual implementations are
-needed. Below are the packages supported and how to create an intercept.
+needed. At this time there are implementations for `httplib2` and `requests`,
+in both Python 2 and 3, `urllib2` and `httplib` in Python 2 and
+`urllib.request` and `http.client` in Python 3.
 
-urllib.request
--------
+The best way to figure out how to use interception is to inspect
+`the tests`_. More comprehensive documentation available upon
+request.
 
-urllib.request is a standard Python module, and ``urllib.request.urlopen``
-is a common way to open URLs.
+.. _the tests: https://github.com/cdent/python3-wsgi-intercept/tree/master/test
 
-The following code will install the WSGI intercept stuff as a default
-urllib.request handler: ::
-
-   >>> from wsgi_intercept.urllib_intercept import install_opener
-   >>> install_opener() #doctest: +ELLIPSIS
-   <urllib.request.OpenerDirector instance at ...>
-   >>> import wsgi_intercept
-   >>> from wsgi_intercept.test_wsgi_app import create_fn
-   >>> wsgi_intercept.add_wsgi_intercept('some_host', 80, create_fn)
-   >>> import urllib.request
-   >>> urllib.request.urlopen('http://some_host:80/').read()
-   'WSGI intercept successful!\\n'
-
-httplib2
---------
-
-httplib2_ is a 3rd party extension of the built-in ``httplib``.  To intercept
-requests, it is similar to urllib::
-
-    >>> from wsgi_intercept.httplib2_intercept import install
-    >>> install()
-    >>> import wsgi_intercept
-    >>> from wsgi_intercept.test_wsgi_app import create_fn
-    >>> wsgi_intercept.add_wsgi_intercept('some_host', 80, create_fn)
-    >>> import httplib2
-    >>> resp, content = httplib2.Http().request('http://some_host:80/', 'GET')
-    >>> content
-    'WSGI intercept successful!\\n'
-
-(Contributed by `David "Whit" Morris`_.)
-
-.. _httplib2: http://code.google.com/p/httplib2/
-.. _David "Whit" Morris: http://public.xdi.org/=whit
 
 History
 =======
@@ -90,12 +59,14 @@ for his own Web testing system, twill_. Because the mechanism is pretty
 generic -- it works at the httplib level -- Titus decided to try adding
 it into all of the *other* Python Web testing frameworks.
 
-This is the result.
+The Python 2 version of wsgi-intercept was the result. The Python 3
+version has evolved out of that, assembled by `Chris Dent`_.
 
 .. _twill: http://www.idyll.org/~t/www-tools/twill.html
 .. _"best Web testing framework": http://blog.ianbicking.org/best-of-the-web-app-test-frameworks.html
 .. _in-process HTTP-to-WSGI interception mechanism: http://www.advogato.org/person/titus/diary.html?start=119
 .. _WSGI application: http://www.python.org/peps/pep-3333.html
+.. _Chris Dent: https://github.com/cdent
 
 Project Home
 ============
@@ -108,7 +79,7 @@ failing tests, et cetera using the Issue Tracker.
 """
 from __future__ import print_function
 
-__version__ = '0.0.1'
+__version__ = '0.6.0'
 
 
 import sys
