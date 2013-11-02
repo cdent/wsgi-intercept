@@ -63,8 +63,6 @@ def test_script_name():
     http_uninstall()
 
 
-@py.test.mark.skipif(sys.version_info[0] == 3 and sys.version_info[1] <= 2,
-        reason='unicode literals needed for this test')
 def test_encoding_errors():
     http_install()
     wsgi_intercept.add_wsgi_intercept(
