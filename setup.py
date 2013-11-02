@@ -1,6 +1,19 @@
 
 from setuptools import setup, find_packages
 
+CLASSIFIERS = """
+Environment :: Web Environment
+Intended Audience :: Developers
+License :: OSI Approved :: MIT License
+Operating System :: OS Independent
+Programming Language :: Python :: 2.6
+Programming Language :: Python :: 2.7
+Programming Language :: Python :: 3.3
+Topic :: Internet :: WWW/HTTP :: WSGI
+Topic :: Software Development :: Testing
+""".strip().splitlines()
+
+
 META = {
     'name': 'wsgi_intercept',
     'version': '0.2',
@@ -11,6 +24,7 @@ META = {
     #url="http://pypi.python.org/pypi/wsgi_intercept",
     'long_description': open('README.md').read(),
     'license': 'MIT License',
+    'classifiers': CLASSIFIERS,
     'packages': find_packages(),
     'extras_require': {
         'testing': [
