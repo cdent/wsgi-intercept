@@ -9,36 +9,30 @@ Python3 port of the important bits of wsgi-intercept, now working for
 What is it?
 ===========
 
-wsgi_intercept installs a WSGI application in place of a real URI for testing.
+wsgi_intercept installs a WSGI application in place of a real URI for
+testing. See the [PyPI page](http://pypi.python.org/pypi/wsgi_intercept)
+page for more details.
 
-Introduction
-------------
-
-Testing a WSGI application normally involves starting a server at a
-local host and port, then pointing your test code to that address.
-Instead, this library lets you intercept calls to any specific
-host/port combination and redirect them into a WSGI application
-importable by your test program. Thus, you can avoid spawning multiple
-processes or threads to test your Web app.
-
-wsgi_intercept works by replacing httplib.HTTPConnection with a
-subclass, wsgi_intercept.WSGI_HTTPConnection. This class then
-redirects specific server/port combinations into a WSGI application by
-emulating a socket. If no intercept is registered for the host and
-port requested, those requests are passed on to the standard handler.
-
-The functions add_wsgi_intercept(host, port, app_create_fn,
-script_name='') and remove_wsgi_intercept(host,port) specify which
-URLs should be redirect into what applications. Note especially that
-app_create_fn is a function object returning a WSGI application;
-script_name becomes SCRIPT_NAME in the WSGI app's environment, if set.
-
-New Version
+Modern Version
 -----------
 
-For the new version only basic intercept functionality will be
-provided, with a working implementation for `urllib2`/`urllib.request`,
-`httplib`/`http.client`, `httplib2` and `requests`.
+For the 2 and 3 version only some intercept functionality is provided,
+with a working implementation in Python 2 for:
+
+* `urllib2`
+* `httplib`
+* `httplib2`
+* `requests`
+
+and in Python 3 for:
+
+* `urllib.request`
+* `http.client`
+* `httplib2`
+* `requests`
+
+If you are using Python 2 and need support for a different HTTP
+client, require a version of `wsgi_intercept<0.6`.
 
 To Do
 -----

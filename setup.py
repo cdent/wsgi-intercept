@@ -1,4 +1,6 @@
 
+import wsgi_intercept
+
 from setuptools import setup, find_packages
 
 CLASSIFIERS = """
@@ -16,13 +18,13 @@ Topic :: Software Development :: Testing
 
 META = {
     'name': 'wsgi_intercept',
-    'version': '0.2',
+    'version': wsgi_intercept.__version__,
     'author': 'Titus Brown, Kumar McMillan, Chris Dent',
     'author_email': 'cdent@peermore.com',
     'description': 'wsgi_intercept installs a WSGI application in place of a real URI for testing.',
     # What will the name be?
-    #url="http://pypi.python.org/pypi/wsgi_intercept",
-    'long_description': open('README.md').read(),
+    'url': 'http://pypi.python.org/pypi/wsgi_intercept',
+    'long_description': wsgi_intercept.__doc__,
     'license': 'MIT License',
     'classifiers': CLASSIFIERS,
     'packages': find_packages(),
