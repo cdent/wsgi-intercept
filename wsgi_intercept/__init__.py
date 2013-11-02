@@ -164,7 +164,8 @@ def make_environ(inp, host, port, script_name):
     environ = {}
 
     method_line = inp.readline()
-    method_line = method_line.decode('ISO-8859-1')
+    if sys.version_info[0] > 2:
+        method_line = method_line.decode('ISO-8859-1')
 
     content_type = None
     content_length = None
@@ -399,8 +400,7 @@ class wsgi_fake_socket:
         try:
             self.inp.write(content)
         except TypeError as exc:
-            print('type error', exc)
-            self.inp.write(content.decode('utf-8'))
+            self.inp.write(content.encode('utf-8'))
 
     def close(self):
         "Do nothing, for now."
