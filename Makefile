@@ -1,4 +1,4 @@
-.PHONY: test clean
+.PHONY: test clean tagv pypi release
 
 clean:
 	find wsgi_intercept -name "*.pyc" |xargs rm || true
@@ -10,3 +10,15 @@ clean:
 
 test:
 	py.test --tb=short -x test
+
+tagv:
+	git tag -a \
+		-m v`python setup.py --version` \
+		v`python setup.py --version`
+	git push origin master --tags
+
+pypi:
+	python setup.py sdist upload
+
+release: clean test tagv pypi
+
