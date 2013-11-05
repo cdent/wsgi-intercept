@@ -399,7 +399,7 @@ class wsgi_fake_socket:
 
         try:
             self.inp.write(content)
-        except TypeError as exc:
+        except TypeError:
             self.inp.write(content.encode('utf-8'))
 
     def close(self):

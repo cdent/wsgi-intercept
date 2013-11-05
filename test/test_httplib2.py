@@ -21,7 +21,8 @@ def uninstall():
 def test_success():
     install()
     http = httplib2.Http()
-    resp, content = http.request('http://some_hopefully_nonexistant_domain:80/')
+    resp, content = http.request(
+            'http://some_hopefully_nonexistant_domain:80/')
     assert content == b'WSGI intercept successful!\n'
     assert wsgi_app.success()
     uninstall()

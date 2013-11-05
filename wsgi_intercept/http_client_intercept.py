@@ -40,8 +40,6 @@ class HTTPS_WSGIInterceptor(HTTPSInterceptorMixin, http_lib.HTTPSConnection,
         HTTP_WSGIInterceptor.__init__(self, host, **kwargs)
 
 
-
-
 def install():
     http_lib.HTTPConnection = HTTP_WSGIInterceptor
     http_lib.HTTPSConnection = HTTPS_WSGIInterceptor

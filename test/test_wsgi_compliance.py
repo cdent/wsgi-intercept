@@ -54,7 +54,8 @@ def test_script_name():
             wsgi_app.create_mi, script_name='/funky')
 
     http = httplib2.Http()
-    response, content = http.request('http://some_hopefully_nonexistant_domain/funky/boom/baz', 'GET')
+    response, content = http.request(
+            'http://some_hopefully_nonexistant_domain/funky/boom/baz')
     internal_env = wsgi_app.get_internals()
 
     assert internal_env['SCRIPT_NAME'] == '/funky'
@@ -63,7 +64,7 @@ def test_script_name():
     http_uninstall()
 
 
-py.test.mark.xfail(sys.version_info[0] == 2 and sys.version_info[1] <= 6,
+@py.test.mark.xfail(sys.version_info[0] == 2 and sys.version_info[1] <= 6,
         reason='works okay on 2.7 and beyond. why?')
 def test_encoding_errors():
     http_install()
@@ -74,7 +75,7 @@ def test_encoding_errors():
     http = httplib2.Http()
     with py.test.raises(UnicodeEncodeError):
         response, content = http.request(
-                'http://some_hopefully_nonexistant_domain/boom/baz', 'GET',
+                'http://some_hopefully_nonexistant_domain/boom/baz',
                 headers={'Accept': u'application/\u2603'})
 
     http_uninstall()

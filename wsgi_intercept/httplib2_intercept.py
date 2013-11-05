@@ -23,7 +23,7 @@ class HTTP_WSGIInterceptorWithTimeout(InterceptorMixin,
             try:
                 HTTPConnection.__init__(self, host, port=port, strict=strict,
                         timeout=timeout, source_address=source_address)
-            except TypeError: #  Python 2.6 doesn't have source_address
+            except TypeError:  # Python 2.6 doesn't have source_address
                 HTTPConnection.__init__(self, host, port=port, strict=strict,
                         timeout=timeout)
         else:
@@ -43,7 +43,7 @@ class HTTPS_WSGIInterceptorWithTimeout(InterceptorMixin,
             try:
                 HTTPSConnection.__init__(self, host, port=port, strict=strict,
                         timeout=timeout, source_address=source_address)
-            except TypeError: #  Python 2.6 doesn't have source_address
+            except TypeError:  # Python 2.6 doesn't have source_address
                 HTTPSConnection.__init__(self, host, port=port, strict=strict,
                         timeout=timeout)
         else:

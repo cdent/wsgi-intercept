@@ -1,5 +1,3 @@
-import pytest
-import sys
 from wsgi_intercept import http_client_intercept
 import wsgi_intercept
 from test import wsgi_app
@@ -8,6 +6,7 @@ try:
     import http.client as http_lib
 except ImportError:
     import httplib as http_lib
+
 
 def teardown_module():
     """Ensure overrides removed."""
