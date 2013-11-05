@@ -9,6 +9,11 @@ try:
 except ImportError:
     import httplib as http_lib
 
+def teardown_module():
+    """Ensure overrides removed."""
+    http_uninstall(443)
+    http_uninstall(80)
+
 
 def http_install(port=80):
     http_client_intercept.install()
@@ -35,15 +40,10 @@ def test_http_success():
 
 def test_https_success():
     http_install(443)
-    if sys.version_info[0] < 3:
-        http_client = http_lib.HTTPSConnection(
-                'some_hopefully_nonexistant_domain')
-        http_client.request('GET', '/')
-        content = http_client.getresponse().read()
-        assert content == b'WSGI intercept successful!\n'
-        assert wsgi_app.success()
-    else:
-        with pytest.raises(NotImplementedError):
-            http_client = http_lib.HTTPSConnection(
-                    'some_hopefully_nonexistant_domain')
+    http_client = http_lib.HTTPSConnection(
+            'some_hopefully_nonexistant_domain')
+    http_client.request('GET', '/')
+    content = http_client.getresponse().read()
+    assert content == b'WSGI intercept successful!\n'
+    assert wsgi_app.success()
     http_uninstall(443)

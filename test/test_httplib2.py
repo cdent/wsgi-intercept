@@ -21,8 +21,7 @@ def uninstall():
 def test_success():
     install()
     http = httplib2.Http()
-    resp, content = http.request(
-            'http://some_hopefully_nonexistant_domain:80/', 'GET')
+    resp, content = http.request('http://some_hopefully_nonexistant_domain:80/')
     assert content == b'WSGI intercept successful!\n'
     assert wsgi_app.success()
     uninstall()
@@ -38,7 +37,6 @@ def test_bogus_domain():
 def test_https_success():
     install(443)
     http = httplib2.Http()
-    resp, content = http.request(
-            'https://some_hopefully_nonexistant_domain/', 'GET')
+    resp, content = http.request('https://some_hopefully_nonexistant_domain/')
     assert wsgi_app.success()
     uninstall()

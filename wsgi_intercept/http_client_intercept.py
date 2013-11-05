@@ -1,22 +1,13 @@
-
-"""intercept HTTP connections that use httplib
-
-(see wsgi_intercept/__init__.py for examples)
-
 """
-
-# XXX: HTTPSConnection is currently not allowed as attempting
-# to override it causes a recursion error.
-
-SKIP_SSL = False
+intercept HTTP connections that use httplib or http.client
+"""
 
 try:
     import http.client as http_lib
-    SKIP_SSL = True
 except ImportError:
     import httplib as http_lib
 
-from . import WSGI_HTTPConnection, WSGI_HTTPSConnection
+from . import WSGI_HTTPConnection
 
 try:
     from http.client import (
@@ -29,19 +20,20 @@ except ImportError:
             HTTPSConnection as OriginalHTTPSConnection
     )
 
+InterceptorMixin = WSGI_HTTPConnection
 
-class Error_HTTPSConnection(object):
 
-    def __init__(self, *args, **kwargs):
-        raise NotImplementedError('HTTPS temporarily not implemented')
+class HTTP_WSGIInterceptor(InterceptorMixin, http_lib.HTTPConnection):
+    pass
+
+
+class HTTPS_WSGIInterceptor(InterceptorMixin, http_lib.HTTPSConnection):
+    pass
 
 
 def install():
-    http_lib.HTTPConnection = WSGI_HTTPConnection
-    if SKIP_SSL:
-        http_lib.HTTPSConnection = Error_HTTPSConnection
-    else:
-        http_lib.HTTPSConnection = WSGI_HTTPSConnection
+    http_lib.HTTPSConnection = HTTPS_WSGIInterceptor
+    http_lib.HTTPConnection = HTTP_WSGIInterceptor
 
 
 def uninstall():
