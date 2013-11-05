@@ -30,7 +30,16 @@ class HTTP_WSGIInterceptor(HTTPInterceptorMixin, http_lib.HTTPConnection):
 
 class HTTPS_WSGIInterceptor(HTTPSInterceptorMixin, http_lib.HTTPSConnection,
         HTTP_WSGIInterceptor):
-    pass
+
+    def __init__(self, host, **kwargs):
+        self.host = host
+        try:
+            self.port = kwargs['port']
+        except KeyError:
+            self.port = None
+        HTTP_WSGIInterceptor.__init__(self, host, **kwargs)
+
+
 
 
 def install():
