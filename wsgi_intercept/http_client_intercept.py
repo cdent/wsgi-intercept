@@ -7,7 +7,7 @@ try:
 except ImportError:
     import httplib as http_lib
 
-from . import WSGI_HTTPConnection
+from . import WSGI_HTTPConnection, WSGI_HTTPSConnection
 
 try:
     from http.client import (
@@ -20,20 +20,22 @@ except ImportError:
             HTTPSConnection as OriginalHTTPSConnection
     )
 
-InterceptorMixin = WSGI_HTTPConnection
+HTTPInterceptorMixin = WSGI_HTTPConnection
+HTTPSInterceptorMixin = WSGI_HTTPSConnection
 
 
-class HTTP_WSGIInterceptor(InterceptorMixin, http_lib.HTTPConnection):
+class HTTP_WSGIInterceptor(HTTPInterceptorMixin, http_lib.HTTPConnection):
     pass
 
 
-class HTTPS_WSGIInterceptor(InterceptorMixin, http_lib.HTTPSConnection):
+class HTTPS_WSGIInterceptor(HTTPSInterceptorMixin, http_lib.HTTPSConnection,
+        HTTP_WSGIInterceptor):
     pass
 
 
 def install():
-    http_lib.HTTPSConnection = HTTPS_WSGIInterceptor
     http_lib.HTTPConnection = HTTP_WSGIInterceptor
+    http_lib.HTTPSConnection = HTTPS_WSGIInterceptor
 
 
 def uninstall():
