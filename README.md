@@ -37,5 +37,4 @@ client, require a version of `wsgi_intercept<0.6`.
 To Do
 -----
 
-* https support using `http.client` is not currently working because of
-  issues with recursive calls after the class is overridden.
+* https support using `http.client` is only somewhat implemented.

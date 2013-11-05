@@ -44,7 +44,10 @@ needed. At this time there are implementations for ``httplib2`` and
 Python 2 and ``urllib.request`` and ``http.client`` in Python 3.
 
 If you are using Python 2 and need support for a different HTTP
-client, require a version of ``wsgi_intercept<0.6``.
+client, require a version of ``wsgi_intercept<0.6``. Earlier versions
+include support for ``mechanize``, ``webtest``, ``webunit`` and
+``zope.testbrowser``. It is quite likely that support for these versions
+will be relatively to add back in to the new version.
 
 The best way to figure out how to use interception is to inspect
 `the tests`_. More comprehensive documentation available upon
@@ -62,8 +65,11 @@ for his own Web testing system, twill_. Because the mechanism is pretty
 generic -- it works at the httplib level -- Titus decided to try adding
 it into all of the *other* Python Web testing frameworks.
 
-The Python 2 version of wsgi-intercept was the result. The Python 3
-version has evolved out of that, assembled by `Chris Dent`_.
+The Python 2 version of wsgi-intercept was the result. Kuman McMillan
+later took over maintenance.
+
+The current version works with Python 2.6, 2.7 and 3.3 and was assembled
+by `Chris Dent`_.
 
 .. _twill: http://www.idyll.org/~t/www-tools/twill.html
 .. _"best Web testing framework": http://blog.ianbicking.org/best-of-the-web-app-test-frameworks.html
