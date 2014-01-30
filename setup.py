@@ -32,7 +32,7 @@ META = {
         'testing': [
             'pytest>=2.4',
             'httplib2',
-            'requests'
+            'requests>=2.0.1'
         ],
     },
 }
