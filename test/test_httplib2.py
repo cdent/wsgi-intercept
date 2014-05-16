@@ -41,3 +41,15 @@ def test_https_success():
     resp, content = http.request('https://some_hopefully_nonexistant_domain/')
     assert wsgi_app.success()
     uninstall()
+
+
+def test_app_error():
+    httplib2_intercept.install()
+    port = 80
+    wsgi_intercept.add_wsgi_intercept(
+        'some_hopefully_nonexistant_domain',
+        port, lambda: wsgi_app.raises_app)
+    http = httplib2.Http()
+    with py.test.raises(wsgi_intercept.WSGIAppError):
+        http.request(
+            'http://some_hopefully_nonexistant_domain:80/')

@@ -1,5 +1,6 @@
 from wsgi_intercept import http_client_intercept
 import wsgi_intercept
+import py.test
 from test import wsgi_app
 
 try:
@@ -46,3 +47,16 @@ def test_https_success():
     assert content == b'WSGI intercept successful!\n'
     assert wsgi_app.success()
     http_uninstall(443)
+
+
+def test_app_error():
+    http_client_intercept.install()
+    port = 80
+    wsgi_intercept.add_wsgi_intercept(
+        'some_hopefully_nonexistant_domain',
+        port, lambda: wsgi_app.raises_app)
+    http_client = http_lib.HTTPConnection(
+            'some_hopefully_nonexistant_domain')
+    with py.test.raises(wsgi_intercept.WSGIAppError):
+        http_client.request('GET', '/')
+        http_client.getresponse().read()
