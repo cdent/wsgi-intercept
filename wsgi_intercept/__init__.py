@@ -68,7 +68,7 @@ it into all of the *other* Python Web testing frameworks.
 The Python 2 version of wsgi-intercept was the result. Kuman McMillan
 later took over maintenance.
 
-The current version works with Python 2.6, 2.7 and 3.3 and was assembled
+The current version works with Python 2.6, 2.7, 3.3 and 3.4 and was assembled
 by `Chris Dent`_.
 
 .. _twill: http://www.idyll.org/~t/www-tools/twill.html

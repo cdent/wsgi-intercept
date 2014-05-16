@@ -4,7 +4,7 @@ python3-wsgi-intercept
 [![travis](https://secure.travis-ci.org/cdent/python3-wsgi-intercept.png)](https://secure.travis-ci.org/cdent/python3-wsgi-intercept)
 
 Python3 port of the important bits of wsgi-intercept, now working for
-2.6, 2.7 and 3.3.
+2.6, 2.7, 3.3 and 3.4.
 
 What is it?
 ===========
