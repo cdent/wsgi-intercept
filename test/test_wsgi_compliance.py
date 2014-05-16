@@ -7,6 +7,15 @@ from test import wsgi_app
 import httplib2
 
 
+def _u(string_literal):
+    """Unicode literal shim allowing some tests to work in Python3.2.
+    """
+    if sys.version_info < (3, 0):
+        import codecs
+        return codecs.unicode_escape_decode(string_literal)[0]
+    return string_literal
+
+
 def http_install():
     install()
     wsgi_intercept.add_wsgi_intercept(
@@ -76,6 +85,6 @@ def test_encoding_errors():
     with py.test.raises(UnicodeEncodeError):
         response, content = http.request(
                 'http://some_hopefully_nonexistant_domain/boom/baz',
-                headers={'Accept': u'application/\u2603'})
+                headers={'Accept': _u('application/\u2603')})
 
     http_uninstall()
