@@ -282,6 +282,23 @@ def make_environ(inp, host, port, script_name):
     return environ
 
 
+class WSGIAppError(Exception):
+    def __init__(self, error, exc_info):
+        Exception.__init__(self)
+        self.error = error
+        self.exception_type = exc_info[0]
+        self.exception_value = exc_info[1]
+        self.traceback = exc_info[2]
+
+    def __str__(self):
+        frame = traceback.extract_tb(self.traceback)[-1]
+        formatted = "{0!r} at {1}:{2}".format(
+            self.error,
+            frame[0],
+            frame[1],
+        )
+        return formatted
+
 #
 # fake socket for WSGI intercept stuff.
 #
@@ -353,7 +370,10 @@ class wsgi_fake_socket:
         environ = make_environ(inp, self.host, self.port, self.script_name)
 
         # run the application.
-        app_result = self.app(environ, start_response)
+        try:
+            app_result = self.app(environ, start_response)
+        except Exception as error:
+            raise WSGIAppError(error, sys.exc_info())
         self.result = iter(app_result)
 
         ###
