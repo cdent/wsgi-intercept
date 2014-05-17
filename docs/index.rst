@@ -1,8 +1,27 @@
-===============================================================================
-wsgi_intercept: installs a WSGI application in place of a real URI for testing.
-===============================================================================
+================================
+Documentation for wsgi_intercept
+================================
 
-.. contents::
+.. automodule:: wsgi_intercept
 
-.. include_docstring:: ./wsgi_intercept/__init__.py
+
+Examples
+========
+
+.. toctree::
+   :maxdepth: 1
+
+   http_client
+   httplib2
+   requests
+   urllib
+
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
 
