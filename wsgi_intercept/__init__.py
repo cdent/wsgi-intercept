@@ -299,6 +299,7 @@ class WSGIAppError(Exception):
         )
         return formatted
 
+
 #
 # fake socket for WSGI intercept stuff.
 #
