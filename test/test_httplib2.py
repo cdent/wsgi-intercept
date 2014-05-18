@@ -1,58 +1,54 @@
-from wsgi_intercept import httplib2_intercept
-from socket import gaierror
-import wsgi_intercept
-from test import wsgi_app
-import httplib2
-
 import py.test
+import wsgi_intercept
+from wsgi_intercept import httplib2_intercept
+from test import wsgi_app
+from test.install import BaseInstalledApp
+import httplib2
+from socket import gaierror
 
-mock_app = wsgi_app.MockWSGIApp(wsgi_app.simple_app)
-
-
-def install(port=80):
-    httplib2_intercept.install()
-    factory = lambda: mock_app
-    wsgi_intercept.add_wsgi_intercept(
-            'some_hopefully_nonexistant_domain',
-            port, factory)
+HOST = 'some_hopefully_nonexistant_domain'
 
 
-def uninstall():
-    httplib2_intercept.uninstall()
+class InstalledApp(BaseInstalledApp):
+    def install(self):
+        httplib2_intercept.install()
+        wsgi_intercept.add_wsgi_intercept(self.host, self.port, self.factory)
+
+    def uninstall(self):
+        wsgi_intercept.remove_wsgi_intercept(self.host, self.port)
+        httplib2_intercept.uninstall()
 
 
 def test_success():
-    install()
-    http = httplib2.Http()
-    resp, content = http.request(
+    mock_app = wsgi_app.MockWSGIApp(wsgi_app.simple_app)
+    with InstalledApp(mock_app, host=HOST, port=80) as app:
+        http = httplib2.Http()
+        resp, content = http.request(
             'http://some_hopefully_nonexistant_domain:80/')
-    assert content == b'WSGI intercept successful!\n'
-    assert mock_app.success()
-    uninstall()
+        assert content == b'WSGI intercept successful!\n'
+        assert app.success()
 
 
 def test_bogus_domain():
-    install()
-    py.test.raises(gaierror,
+    mock_app = wsgi_app.MockWSGIApp(wsgi_app.simple_app)
+    with InstalledApp(mock_app, host=HOST, port=80):
+        py.test.raises(
+            gaierror,
             'httplib2_intercept.HTTP_WSGIInterceptorWithTimeout("_nonexistant_domain_").connect()')
-    uninstall()
 
 
 def test_https_success():
-    install(443)
-    http = httplib2.Http()
-    resp, content = http.request('https://some_hopefully_nonexistant_domain/')
-    assert mock_app.success()
-    uninstall()
+    mock_app = wsgi_app.MockWSGIApp(wsgi_app.simple_app)
+    with InstalledApp(mock_app, host=HOST, port=443) as app:
+        http = httplib2.Http()
+        resp, content = http.request('https://some_hopefully_nonexistant_domain/')
+        assert app.success()
 
 
 def test_app_error():
-    httplib2_intercept.install()
-    port = 80
-    wsgi_intercept.add_wsgi_intercept(
-        'some_hopefully_nonexistant_domain',
-        port, lambda: wsgi_app.raises_app)
-    http = httplib2.Http()
-    with py.test.raises(wsgi_intercept.WSGIAppError):
-        http.request(
-            'http://some_hopefully_nonexistant_domain:80/')
+    mock_app = wsgi_app.MockWSGIApp(wsgi_app.raises_app)
+    with InstalledApp(mock_app, host=HOST, port=80):
+        http = httplib2.Http()
+        with py.test.raises(wsgi_intercept.WSGIAppError):
+            http.request(
+                'http://some_hopefully_nonexistant_domain:80/')

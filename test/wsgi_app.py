@@ -21,10 +21,6 @@ class MockWSGIApp(object):
         self._internals = environ
         return self._app(environ, start_response)
 
-    def reset(self):
-        self._hits = 0
-        self._internals = {}
-
     def success(self):
         return self._hits > 0
 
