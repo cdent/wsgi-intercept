@@ -8,10 +8,14 @@ import wsgi_intercept
 from test import wsgi_app
 
 
+mock_app = wsgi_app.MockWSGIApp(wsgi_app.simple_app)
+
+
 def add_http_intercept(port=80):
+    factory = lambda: mock_app
     wsgi_intercept.add_wsgi_intercept(
             'some_hopefully_nonexistant_domain',
-            port, wsgi_app.create_fn)
+            port, factory)
 
 
 def remove_intercept():
@@ -22,7 +26,7 @@ def test_http():
     add_http_intercept()
     urllib_intercept.install_opener()
     url_lib.urlopen('http://some_hopefully_nonexistant_domain:80/')
-    assert wsgi_app.success()
+    assert mock_app.success()
     remove_intercept()
 
 
@@ -30,7 +34,7 @@ def test_http_default_port():
     add_http_intercept()
     urllib_intercept.install_opener()
     url_lib.urlopen('http://some_hopefully_nonexistant_domain/')
-    assert wsgi_app.success()
+    assert mock_app.success()
     remove_intercept()
 
 
@@ -38,7 +42,7 @@ def test_https():
     add_http_intercept(443)
     urllib_intercept.install_opener()
     url_lib.urlopen('https://some_hopefully_nonexistant_domain:443/')
-    assert wsgi_app.success()
+    assert mock_app.success()
     remove_intercept()
 
 
@@ -46,7 +50,7 @@ def test_https_default_port():
     add_http_intercept(443)
     urllib_intercept.install_opener()
     url_lib.urlopen('https://some_hopefully_nonexistant_domain/')
-    assert wsgi_app.success()
+    assert mock_app.success()
     remove_intercept()
 
 

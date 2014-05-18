@@ -9,6 +9,9 @@ except ImportError:
     import httplib as http_lib
 
 
+mock_app = wsgi_app.MockWSGIApp(wsgi_app.simple_app)
+
+
 def teardown_module():
     """Ensure overrides removed."""
     http_uninstall(443)
@@ -17,8 +20,9 @@ def teardown_module():
 
 def http_install(port=80):
     http_client_intercept.install()
+    factory = lambda: mock_app
     wsgi_intercept.add_wsgi_intercept(
-            'some_hopefully_nonexistant_domain', port, wsgi_app.create_fn)
+            'some_hopefully_nonexistant_domain', port, factory)
 
 
 def http_uninstall(port=80):
@@ -34,7 +38,7 @@ def test_http_success():
     http_client.request('GET', '/')
     content = http_client.getresponse().read()
     assert content == b'WSGI intercept successful!\n'
-    assert wsgi_app.success()
+    assert mock_app.success()
     http_uninstall()
 
 
@@ -45,7 +49,7 @@ def test_https_success():
     http_client.request('GET', '/')
     content = http_client.getresponse().read()
     assert content == b'WSGI intercept successful!\n'
-    assert wsgi_app.success()
+    assert mock_app.success()
     http_uninstall(443)
 
 

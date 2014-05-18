@@ -10,16 +10,26 @@ except ImportError:
     bytes = str
 
 
-_app_was_hit = False
-_internals = {}
+class MockWSGIApp(object):
+    def __init__(self, app):
+        self._app = app
+        self._hits = 0
+        self._internals = {}
 
+    def __call__(self, environ, start_response):
+        self._hits += 1
+        self._internals = environ
+        return self._app(environ, start_response)
 
-def success():
-    return _app_was_hit
+    def reset(self):
+        self._hits = 0
+        self._internals = {}
 
+    def success(self):
+        return self._hits > 0
 
-def get_internals():
-    return _internals
+    def get_internals(self):
+        return self._internals
 
 
 def simple_app(environ, start_response):
@@ -27,29 +37,10 @@ def simple_app(environ, start_response):
     status = '200 OK'
     response_headers = [('Content-type', 'text/plain')]
     start_response(status, response_headers)
-
-    global _app_was_hit
-    _app_was_hit = True
-
     return [b'WSGI intercept successful!\n']
 
 
-def create_fn():
-    global _app_was_hit
-    _app_was_hit = False
-    return simple_app
-
-
-def create_mi():
-    global _internals
-    _internals = {}
-    return more_interesting_app
-
-
 def more_interesting_app(environ, start_response):
-    global _internals
-    _internals = environ
-
     start_response('200 OK', [('Content-type', 'text/plain')])
     return [pformat(environ).encode('utf-8')]
 

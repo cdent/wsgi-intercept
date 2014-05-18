@@ -6,12 +6,15 @@ import httplib2
 
 import py.test
 
+mock_app = wsgi_app.MockWSGIApp(wsgi_app.simple_app)
+
 
 def install(port=80):
     httplib2_intercept.install()
+    factory = lambda: mock_app
     wsgi_intercept.add_wsgi_intercept(
             'some_hopefully_nonexistant_domain',
-            port, wsgi_app.create_fn)
+            port, factory)
 
 
 def uninstall():
@@ -24,7 +27,7 @@ def test_success():
     resp, content = http.request(
             'http://some_hopefully_nonexistant_domain:80/')
     assert content == b'WSGI intercept successful!\n'
-    assert wsgi_app.success()
+    assert mock_app.success()
     uninstall()
 
 
@@ -39,7 +42,7 @@ def test_https_success():
     install(443)
     http = httplib2.Http()
     resp, content = http.request('https://some_hopefully_nonexistant_domain/')
-    assert wsgi_app.success()
+    assert mock_app.success()
     uninstall()
 
 
