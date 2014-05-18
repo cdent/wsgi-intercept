@@ -88,7 +88,7 @@ failing tests, et cetera using the Issue Tracker.
 """
 from __future__ import print_function
 
-__version__ = '0.6.2'
+__version__ = '0.6.3'
 
 
 import sys
@@ -283,6 +283,15 @@ def make_environ(inp, host, port, script_name):
 
 
 class WSGIAppError(Exception):
+    """
+    An exception that wraps any Exception raised by the WSGI app
+    that is called. This is done for two reasons: it ensures that
+    intercepted libraries (such as requests) which use exceptions
+    to trigger behaviors are not interfered with by exceptions from
+    the WSGI app. It also helps to define a solid boundary, akin
+    to the network boundary between server and client, in the
+    testing environment.
+    """
     def __init__(self, error, exc_info):
         Exception.__init__(self)
         self.error = error
