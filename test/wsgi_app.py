@@ -52,3 +52,7 @@ def more_interesting_app(environ, start_response):
 
     start_response('200 OK', [('Content-type', 'text/plain')])
     return [pformat(environ).encode('utf-8')]
+
+
+def raises_app(environ, start_response):
+    raise TypeError("bah")
