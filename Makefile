@@ -1,5 +1,8 @@
 .PHONY: test clean tagv pypi release
 
+default:
+	@echo "Pick a target (e.g., clean, test)"
+
 clean:
 	find wsgi_intercept -name "*.pyc" |xargs rm || true
 	rm -r dist || true
