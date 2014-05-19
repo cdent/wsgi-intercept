@@ -5,11 +5,13 @@
 
 """
 
-from . import WSGI_HTTPConnection, WSGI_HTTPSConnection
-from . import HTTPConnection, HTTPSConnection
-from httplib2 import (SCHEME_TO_CONNECTION, HTTPConnectionWithTimeout,
-        HTTPSConnectionWithTimeout)
 import sys
+
+from httplib2 import (SCHEME_TO_CONNECTION, HTTPConnectionWithTimeout,
+                      HTTPSConnectionWithTimeout)
+
+from . import (HTTPConnection, HTTPSConnection, WSGI_HTTPConnection,
+               WSGI_HTTPSConnection)
 
 HTTPInterceptorMixin = WSGI_HTTPConnection
 HTTPSInterceptorMixin = WSGI_HTTPSConnection
