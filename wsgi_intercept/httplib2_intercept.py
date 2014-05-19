@@ -5,15 +5,17 @@
 
 """
 
-from . import WSGI_HTTPConnection, HTTPConnection, HTTPSConnection
+from . import WSGI_HTTPConnection, WSGI_HTTPSConnection
+from . import HTTPConnection, HTTPSConnection
 from httplib2 import (SCHEME_TO_CONNECTION, HTTPConnectionWithTimeout,
         HTTPSConnectionWithTimeout)
 import sys
 
-InterceptorMixin = WSGI_HTTPConnection
+HTTPInterceptorMixin = WSGI_HTTPConnection
+HTTPSInterceptorMixin = WSGI_HTTPSConnection
 
 
-class HTTP_WSGIInterceptorWithTimeout(InterceptorMixin,
+class HTTP_WSGIInterceptorWithTimeout(HTTPInterceptorMixin,
         HTTPConnectionWithTimeout):
     def __init__(self, host, port=None, strict=None, timeout=None,
             proxy_info=None, source_address=None):
@@ -31,7 +33,7 @@ class HTTP_WSGIInterceptorWithTimeout(InterceptorMixin,
                     timeout=timeout, source_address=source_address)
 
 
-class HTTPS_WSGIInterceptorWithTimeout(InterceptorMixin,
+class HTTPS_WSGIInterceptorWithTimeout(HTTPSInterceptorMixin,
         HTTPSConnectionWithTimeout):
     def __init__(self, host, port=None, strict=None, timeout=None,
             proxy_info=None, ca_certs=None, source_address=None,
