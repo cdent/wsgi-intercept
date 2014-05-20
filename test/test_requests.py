@@ -1,21 +1,13 @@
 import py.test
-import wsgi_intercept
-from wsgi_intercept import requests_intercept
+from wsgi_intercept import requests_intercept, WSGIAppError
 from test import wsgi_app
-from test.install import BaseInstalledApp
+from test.install import installer_class
 import requests
 from requests.exceptions import ConnectionError
 
 HOST = 'some_hopefully_nonexistant_domain'
 
-
-class InstalledApp(BaseInstalledApp):
-    def install(self):
-        requests_intercept.install()
-        wsgi_intercept.add_wsgi_intercept(self.host, self.port, self.factory)
-
-    def uninstall(self):
-        requests_intercept.uninstall()
+InstalledApp = installer_class(requests_intercept)
 
 
 def test_success():
@@ -45,5 +37,5 @@ def test_https_success():
 def test_app_error():
     mock_app = wsgi_app.MockWSGIApp(wsgi_app.raises_app)
     with InstalledApp(mock_app, host=HOST, port=80):
-        with py.test.raises(wsgi_intercept.WSGIAppError):
+        with py.test.raises(WSGIAppError):
             requests.get('http://some_hopefully_nonexistant_domain:80/')

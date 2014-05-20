@@ -1,8 +1,7 @@
 import py.test
-import wsgi_intercept
-from wsgi_intercept import urllib_intercept
+from wsgi_intercept import urllib_intercept, WSGIAppError
 from test import wsgi_app
-from test.install import BaseInstalledApp
+from test.install import installer_class
 try:
     import urllib.request as url_lib
 except ImportError:
@@ -10,14 +9,7 @@ except ImportError:
 
 HOST = 'some_hopefully_nonexistant_domain'
 
-
-class InstalledApp(BaseInstalledApp):
-    def install(self):
-        urllib_intercept.install_opener()
-        wsgi_intercept.add_wsgi_intercept(self.host, self.port, self.factory)
-
-    def uninstall(self):
-        wsgi_intercept.remove_wsgi_intercept(self.host, self.port)
+InstalledApp = installer_class(install=urllib_intercept.install_opener)
 
 
 def test_http():
@@ -51,5 +43,5 @@ def test_https_default_port():
 def test_app_error():
     mock_app = wsgi_app.MockWSGIApp(wsgi_app.raises_app)
     with InstalledApp(mock_app, host=HOST, port=80):
-        with py.test.raises(wsgi_intercept.WSGIAppError):
+        with py.test.raises(WSGIAppError):
             url_lib.urlopen('http://some_hopefully_nonexistant_domain:80/')
