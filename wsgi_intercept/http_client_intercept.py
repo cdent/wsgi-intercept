@@ -1,5 +1,4 @@
-"""
-intercept HTTP connections that use httplib or http.client
+"""Intercept HTTP connections that use httplib (Py2) or http.client (Py3).
 """
 
 try:

@@ -1,8 +1,4 @@
-
-"""intercept HTTP connections that use httplib2
-
-(see wsgi_intercept/__init__.py for examples)
-
+"""Intercept HTTP connections that use `httplib2 <https://github.com/jcgregorio/httplib2>`_.
 """
 
 import sys
