@@ -11,8 +11,7 @@ InstalledApp = installer_class(httplib2_intercept)
 
 
 def test_simple_override():
-    mock_simple_app = wsgi_app.MockWSGIApp(wsgi_app.simple_app)
-    with InstalledApp(mock_simple_app, host=HOST) as app:
+    with InstalledApp(wsgi_app.simple_app, host=HOST) as app:
         http = httplib2.Http()
         resp, content = http.request(
             'http://some_hopefully_nonexistant_domain:80/', 'GET')
@@ -20,8 +19,7 @@ def test_simple_override():
 
 
 def test_more_interesting():
-    mock_more_interesting_app = wsgi_app.MockWSGIApp(wsgi_app.more_interesting_app)
-    with InstalledApp(mock_more_interesting_app, host=HOST) as app:
+    with InstalledApp(wsgi_app.more_interesting_app, host=HOST) as app:
         http = httplib2.Http()
         resp, content = http.request(
             'http://some_hopefully_nonexistant_domain/%E4%B8%96%E4%B8%8A%E5%8E%9F%E4%BE%86%E9%82%84%E6%9C%89%E3%80%8C%E7%BE%9A%E7%89%9B%E3%80%8D%E9%80%99%E7%A8%AE%E5%8B%95%E7%89%A9%EF%BC%81%2Fbarney?bar=baz%20zoom',
@@ -35,9 +33,8 @@ def test_more_interesting():
 
 
 def test_script_name():
-    mock_more_interesting_app = wsgi_app.MockWSGIApp(wsgi_app.more_interesting_app)
-    with InstalledApp(
-            mock_more_interesting_app, host=HOST, script_name='/funky') as app:
+    with InstalledApp(wsgi_app.more_interesting_app, host=HOST,
+                      script_name='/funky') as app:
         http = httplib2.Http()
         response, content = http.request(
             'http://some_hopefully_nonexistant_domain/funky/boom/baz')
@@ -51,8 +48,7 @@ def test_script_name():
     sys.version_info[0] == 2 and sys.version_info[1] <= 6,
     reason='works okay on 2.7 and beyond. why?')
 def test_encoding_errors():
-    mock_more_interesting_app = wsgi_app.MockWSGIApp(wsgi_app.more_interesting_app)
-    with InstalledApp(mock_more_interesting_app, host=HOST):
+    with InstalledApp(wsgi_app.more_interesting_app, host=HOST):
         http = httplib2.Http()
         with py.test.raises(UnicodeEncodeError):
             response, content = http.request(

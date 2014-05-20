@@ -10,6 +10,19 @@ class BaseInstalledApp(object):
         self.script_name = script_name
         self._install = install or (lambda: None)
         self._uninstall = uninstall or (lambda: None)
+        self._hits = 0
+        self._internals = {}
+
+    def __call__(self, environ, start_response):
+        self._hits += 1
+        self._internals = environ
+        return self.app(environ, start_response)
+
+    def success(self):
+        return self._hits > 0
+
+    def get_internals(self):
+        return self._internals
 
     def install_wsgi_intercept(self):
         wsgi_intercept.add_wsgi_intercept(
@@ -27,11 +40,11 @@ class BaseInstalledApp(object):
         self._uninstall()
 
     def factory(self):
-        return self.app
+        return self
 
     def __enter__(self):
         self.install()
-        return self.app
+        return self
 
     def __exit__(self, *args, **kwargs):
         self.uninstall()

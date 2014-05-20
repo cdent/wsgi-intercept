@@ -10,24 +10,6 @@ except ImportError:
     bytes = str
 
 
-class MockWSGIApp(object):
-    def __init__(self, app):
-        self._app = app
-        self._hits = 0
-        self._internals = {}
-
-    def __call__(self, environ, start_response):
-        self._hits += 1
-        self._internals = environ
-        return self._app(environ, start_response)
-
-    def success(self):
-        return self._hits > 0
-
-    def get_internals(self):
-        return self._internals
-
-
 def simple_app(environ, start_response):
     """Simplest possible application object"""
     status = '200 OK'

@@ -13,8 +13,7 @@ InstalledApp = installer_class(http_client_intercept)
 
 
 def test_http_success():
-    mock_app = wsgi_app.MockWSGIApp(wsgi_app.simple_app)
-    with InstalledApp(mock_app, host=HOST, port=80) as app:
+    with InstalledApp(wsgi_app.simple_app, host=HOST, port=80) as app:
         http_client = http_lib.HTTPConnection(HOST)
         http_client.request('GET', '/')
         content = http_client.getresponse().read()
@@ -23,8 +22,7 @@ def test_http_success():
 
 
 def test_https_success():
-    mock_app = wsgi_app.MockWSGIApp(wsgi_app.simple_app)
-    with InstalledApp(mock_app, host=HOST, port=443) as app:
+    with InstalledApp(wsgi_app.simple_app, host=HOST, port=443) as app:
         http_client = http_lib.HTTPSConnection(HOST)
         http_client.request('GET', '/')
         content = http_client.getresponse().read()
@@ -33,8 +31,7 @@ def test_https_success():
 
 
 def test_app_error():
-    mock_app = wsgi_app.MockWSGIApp(wsgi_app.raises_app)
-    with InstalledApp(mock_app, host=HOST, port=80):
+    with InstalledApp(wsgi_app.raises_app, host=HOST, port=80):
         http_client = http_lib.HTTPConnection(HOST)
         with py.test.raises(WSGIAppError):
             http_client.request('GET', '/')
