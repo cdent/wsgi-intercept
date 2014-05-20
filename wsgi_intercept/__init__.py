@@ -65,7 +65,7 @@ for his own Web testing system, twill_. Because the mechanism is pretty
 generic -- it works at the httplib level -- Titus decided to try adding
 it into all of the *other* Python Web testing frameworks.
 
-The Python 2 version of wsgi-intercept was the result. Kuman McMillan
+The Python 2 version of wsgi-intercept was the result. Kumar McMillan
 later took over maintenance.
 
 The current version works with Python 2.6, 2.7, 3.3 and 3.4 and was assembled
