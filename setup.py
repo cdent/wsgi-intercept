@@ -21,7 +21,7 @@ Topic :: Software Development :: Testing
 META = {
     'name': 'wsgi_intercept',
     'version': wsgi_intercept.__version__,
-    'author': 'Titus Brown, Kumar McMillan, Chris Dent',
+    'author': 'Titus Brown, Kumar McMillan, Chris Dent, Sasha Hart',
     'author_email': 'cdent@peermore.com',
     'description': 'wsgi_intercept installs a WSGI application in place of a real URI for testing.',
     # What will the name be?

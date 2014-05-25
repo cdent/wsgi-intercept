@@ -69,13 +69,14 @@ The Python 2 version of wsgi-intercept was the result. Kumar McMillan
 later took over maintenance.
 
 The current version works with Python 2.6, 2.7, 3.3 and 3.4 and was assembled
-by `Chris Dent`_.
+by `Chris Dent`_. Testing and documentation improvements from `Sasha Hart`_.
 
 .. _twill: http://www.idyll.org/~t/www-tools/twill.html
 .. _"best Web testing framework": http://blog.ianbicking.org/best-of-the-web-app-test-frameworks.html
 .. _in-process HTTP-to-WSGI interception mechanism: http://www.advogato.org/person/titus/diary.html?start=119
 .. _WSGI application: http://www.python.org/peps/pep-3333.html
 .. _Chris Dent: https://github.com/cdent
+.. _Sasha Hart: https://github.com/sashahart
 
 Project Home
 ============
