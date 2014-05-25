@@ -10,9 +10,13 @@ clean:
 	rm -r wsgi_intercept.egg-info || true
 	rm *.bundle || true
 	rm -r *-bundle* || true
+	cd docs && make clean
 
 test:
 	py.test --tb=short -x test
+
+doctest:
+	cd docs && make doctest
 
 tagv:
 	git tag -a \
@@ -22,6 +26,9 @@ tagv:
 
 pypi:
 	python setup.py sdist upload
+
+docs: docs/*.rst
+	cd docs && $(MAKE) html
 
 release: clean test tagv pypi
 

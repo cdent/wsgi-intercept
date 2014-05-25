@@ -1,5 +1,4 @@
-"""
-intercept HTTP connections that use requests
+"""Intercept HTTP connections that use `requests <http://docs.python-requests.org/en/latest/>`_.
 """
 
 from . import WSGI_HTTPConnection, wsgi_fake_socket
