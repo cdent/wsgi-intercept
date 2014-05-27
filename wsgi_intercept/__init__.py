@@ -40,14 +40,15 @@ Packages Intercepted
 Unfortunately each of the Web testing frameworks uses its own specific
 mechanism for making HTTP call-outs, so individual implementations are
 needed. At this time there are implementations for ``httplib2`` and
-``requests`` in both Python 2 and 3, ``urllib2`` and ``httplib`` in
-Python 2 and ``urllib.request`` and ``http.client`` in Python 3.
+``requests`` in both Python 2 and 3, ``urllib2``, ``httplib`` and
+``mechanize`` in Python 2 and ``urllib.request`` and ``http.client`` in
+Python 3.
 
 If you are using Python 2 and need support for a different HTTP
 client, require a version of ``wsgi_intercept<0.6``. Earlier versions
-include support for ``mechanize``, ``webtest``, ``webunit`` and
-``zope.testbrowser``. It is quite likely that support for these versions
-will be relatively to add back in to the new version.
+include support for ``webtest``, ``webunit`` and ``zope.testbrowser``.
+It is quite likely that support for these versions will be relatively
+easy to add back in to the new version.
 
 The best way to figure out how to use interception is to inspect
 `the tests`_. More comprehensive documentation available upon
