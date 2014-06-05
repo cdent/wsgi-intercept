@@ -35,3 +35,15 @@ def test_app_error():
     with InstalledApp(wsgi_app.raises_app, host=HOST, port=80):
         with py.test.raises(WSGIAppError):
             requests.get('http://some_hopefully_nonexistant_domain:80/')
+
+
+def test_http_not_intercepted():
+    with InstalledApp(wsgi_app.raises_app, host=HOST, port=80):
+        resp = requests.get("http://google.com")
+        assert resp.status_code >= 200 and resp.status_code < 300
+
+
+def test_https_not_intercepted():
+    with InstalledApp(wsgi_app.raises_app, host=HOST, port=80):
+        resp = requests.get("https://google.com")
+        assert resp.status_code >= 200 and resp.status_code < 300
