@@ -89,7 +89,7 @@ failing tests, et cetera using the Issue Tracker.
 """
 from __future__ import print_function
 
-__version__ = '0.6.3'
+__version__ = '0.6.4'
 
 
 import sys
