@@ -84,7 +84,10 @@ Project Home
 This project lives on `GitHub`_. Please submit all bugs, patches,
 failing tests, et cetera using the Issue Tracker.
 
+Additional documentation is available on `Read The Docs`_.
+
 .. _GitHub: http://github.com/cdent/python3-wsgi-intercept
+.. _Read The Docs: http://wsgi-intercept.readthedocs.org/en/latest/
 
 """
 from __future__ import print_function

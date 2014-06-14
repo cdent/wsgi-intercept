@@ -6,6 +6,9 @@ python3-wsgi-intercept
 Python3 port of the important bits of wsgi-intercept, now working for
 2.6, 2.7, 3.3 and 3.4.
 
+Documentation is available on [Read The
+Docs](http://wsgi-intercept.readthedocs.org/en/latest/).
+
 What is it?
 ===========
 
