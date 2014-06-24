@@ -369,7 +369,7 @@ class wsgi_fake_socket:
                     v = v.encode('utf-8')
                 except AttributeError:
                     pass
-                self.output.write(k + b':' + v + b"\n")
+                self.output.write(k + b': ' + v + b"\n")
             self.output.write(b'\n')
 
             def write_fn(s):
