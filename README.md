@@ -41,4 +41,6 @@ client, require a version of `wsgi_intercept<0.6`.
 To Do
 -----
 
-* https support using `http.client` is only somewhat implemented.
+* https support using `http.client` is only somewhat implemented:
+  If intercepting an HTTPS domain, requests to other HTTPS domains
+  fail.
