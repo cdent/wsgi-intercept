@@ -93,7 +93,7 @@ Additional documentation is available on `Read The Docs`_.
 """
 from __future__ import print_function
 
-__version__ = '0.6.5'
+__version__ = '0.7.0'
 
 
 import sys
