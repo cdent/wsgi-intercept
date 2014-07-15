@@ -12,7 +12,7 @@ HOST = 'some_hopefully_nonexistant_domain'
 InstalledApp = installer_class(http_client_intercept)
 
 
-def test_http_success():
+def test_http():
     with InstalledApp(wsgi_app.simple_app, host=HOST, port=80) as app:
         http_client = http_lib.HTTPConnection(HOST)
         http_client.request('GET', '/')
@@ -22,7 +22,7 @@ def test_http_success():
         assert app.success()
 
 
-def test_https_success():
+def test_https():
     with InstalledApp(wsgi_app.simple_app, host=HOST, port=443) as app:
         http_client = http_lib.HTTPSConnection(HOST)
         http_client.request('GET', '/')
