@@ -27,13 +27,24 @@ else:
 
 HOST = 'some_hopefully_nonexistent_domain'
 
-ONLY_PYTHON2_NOT_PYPY = py.test.mark.skipif(not CAN_RUN_TESTS,
-    reason="mechanize is not ported from Python 2 and fails in PyPy"
-)
+ONLY_PYTHON2_NOT_PYPY = py.test.mark.skipif(
+    not CAN_RUN_TESTS,
+    reason="mechanize is not ported from Python 2 and fails in PyPy")
 
 
 @ONLY_PYTHON2_NOT_PYPY
-def test_success():
+def test_http():
+    with InstalledApp(wsgi_app.simple_app, host=HOST, port=80) as app:
+        browser = mechanize.Browser()
+        url = 'http://some_hopefully_nonexistent_domain:80'
+        response = browser.open(url)
+        content = response.read()
+        assert content == b'WSGI intercept successful!\n'
+        assert app.success()
+
+
+@ONLY_PYTHON2_NOT_PYPY
+def test_http_default_port():
     with InstalledApp(wsgi_app.simple_app, host=HOST, port=80) as app:
         browser = mechanize.Browser()
         url = 'http://some_hopefully_nonexistent_domain'
@@ -52,10 +63,20 @@ def test_bogus_domain():
 
 
 @ONLY_PYTHON2_NOT_PYPY
-def test_https_success():
+def test_https():
     with InstalledApp(wsgi_app.simple_app, host=HOST, port=443) as app:
         browser = mechanize.Browser()
         response = browser.open('https://some_hopefully_nonexistent_domain')
+        content = response.read()
+        assert content == b'WSGI intercept successful!\n'
+        assert app.success()
+
+
+@ONLY_PYTHON2_NOT_PYPY
+def test_https_default_port():
+    with InstalledApp(wsgi_app.simple_app, host=HOST, port=443) as app:
+        browser = mechanize.Browser()
+        response = browser.open('https://some_hopefully_nonexistent_domain:443')
         content = response.read()
         assert content == b'WSGI intercept successful!\n'
         assert app.success()

@@ -39,4 +39,4 @@ def test_https_default_port():
 def test_app_error():
     with InstalledApp(wsgi_app.raises_app, host=HOST, port=80):
         with py.test.raises(WSGIAppError):
-            url_lib.urlopen('http://some_hopefully_nonexistant_domain:80/')
+            url_lib.urlopen('http://some_hopefully_nonexistant_domain/')

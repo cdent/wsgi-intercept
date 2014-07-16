@@ -10,9 +10,16 @@ HOST = 'some_hopefully_nonexistant_domain'
 InstalledApp = installer_class(requests_intercept)
 
 
-def test_success():
+def test_http():
     with InstalledApp(wsgi_app.simple_app, host=HOST, port=80) as app:
         resp = requests.get('http://some_hopefully_nonexistant_domain:80/')
+        assert resp.content == b'WSGI intercept successful!\n'
+        assert app.success()
+
+
+def test_http_default_port():
+    with InstalledApp(wsgi_app.simple_app, host=HOST, port=80) as app:
+        resp = requests.get('http://some_hopefully_nonexistant_domain/')
         assert resp.content == b'WSGI intercept successful!\n'
         assert app.success()
 
@@ -24,7 +31,14 @@ def test_bogus_domain():
             'requests.get("http://_nonexistant_domain_")')
 
 
-def test_https_success():
+def test_https():
+    with InstalledApp(wsgi_app.simple_app, host=HOST, port=443) as app:
+        resp = requests.get('https://some_hopefully_nonexistant_domain:443/')
+        assert resp.content == b'WSGI intercept successful!\n'
+        assert app.success()
+
+
+def test_https_default_port():
     with InstalledApp(wsgi_app.simple_app, host=HOST, port=443) as app:
         resp = requests.get('https://some_hopefully_nonexistant_domain/')
         assert resp.content == b'WSGI intercept successful!\n'
@@ -34,7 +48,7 @@ def test_https_success():
 def test_app_error():
     with InstalledApp(wsgi_app.raises_app, host=HOST, port=80):
         with py.test.raises(WSGIAppError):
-            requests.get('http://some_hopefully_nonexistant_domain:80/')
+            requests.get('http://some_hopefully_nonexistant_domain/')
 
 
 def test_http_not_intercepted():

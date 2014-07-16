@@ -18,6 +18,14 @@ def test_simple_override():
         assert app.success()
 
 
+def test_simple_override_default_port():
+    with InstalledApp(wsgi_app.simple_app, host=HOST) as app:
+        http = httplib2.Http()
+        resp, content = http.request(
+            'http://some_hopefully_nonexistant_domain/', 'GET')
+        assert app.success()
+
+
 def test_more_interesting():
     with InstalledApp(wsgi_app.more_interesting_app, host=HOST) as app:
         http = httplib2.Http()
