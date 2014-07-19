@@ -24,6 +24,13 @@ def test_http_default_port():
         assert app.success()
 
 
+def test_http_other_port():
+    with InstalledApp(wsgi_app.simple_app, host=HOST, port=8080) as app:
+        resp = requests.get('http://some_hopefully_nonexistant_domain:8080/')
+        assert resp.content == b'WSGI intercept successful!\n'
+        assert app.success()
+
+
 def test_bogus_domain():
     with InstalledApp(wsgi_app.simple_app, host=HOST, port=80):
         py.test.raises(

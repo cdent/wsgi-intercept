@@ -32,6 +32,16 @@ def test_https():
         assert app.success()
 
 
+def test_other():
+    with InstalledApp(wsgi_app.simple_app, host=HOST, port=8080) as app:
+        http_client = http_lib.HTTPConnection(HOST + ':8080')
+        http_client.request('GET', '/')
+        content = http_client.getresponse().read()
+        http_client.close()
+        assert content == b'WSGI intercept successful!\n'
+        assert app.success()
+
+
 def test_app_error():
     with InstalledApp(wsgi_app.raises_app, host=HOST, port=80):
         http_client = http_lib.HTTPConnection(HOST)

@@ -24,6 +24,12 @@ def test_http_default_port():
         assert app.success()
 
 
+def test_http_other_port():
+    with InstalledApp(wsgi_app.simple_app, host=HOST, port=8080) as app:
+        url_lib.urlopen('http://some_hopefully_nonexistant_domain:8080/')
+        assert app.success()
+
+
 def test_https():
     with InstalledApp(wsgi_app.simple_app, host=HOST, port=443) as app:
         url_lib.urlopen('https://some_hopefully_nonexistant_domain:443/')

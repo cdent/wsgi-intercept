@@ -55,6 +55,17 @@ def test_http_default_port():
 
 
 @ONLY_PYTHON2_NOT_PYPY
+def test_http_other_port():
+    with InstalledApp(wsgi_app.simple_app, host=HOST, port=8080) as app:
+        browser = mechanize.Browser()
+        url = 'http://some_hopefully_nonexistent_domain:8080'
+        response = browser.open(url)
+        content = response.read()
+        assert content == b'WSGI intercept successful!\n'
+        assert app.success()
+
+
+@ONLY_PYTHON2_NOT_PYPY
 def test_bogus_domain():
     with InstalledApp(wsgi_app.simple_app, host=HOST, port=80):
         browser = mechanize.Browser()
