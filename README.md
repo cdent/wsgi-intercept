@@ -26,7 +26,6 @@ with a working implementation in Python 2 for:
 * `httplib`
 * `httplib2`
 * `requests`
-* `mechanize`
 
 and in Python 3 for:
 
