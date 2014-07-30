@@ -36,7 +36,11 @@ and in Python 3 for:
 * `requests`
 
 If you are using Python 2 and need support for a different HTTP
-client, require a version of `wsgi_intercept<0.6`.
+client, require a version of `wsgi_intercept<0.6`. Another option
+to keep in mind is that interceptor code from earlier versions,
+such as the interceptor for `mechanize` ought to work when imported
+independently (see [related
+conversation](https://github.com/cdent/python3-wsgi-intercept/issues/16).
 
 To Do
 -----
