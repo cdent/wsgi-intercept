@@ -5,6 +5,7 @@ default:
 
 clean:
 	find wsgi_intercept -name "*.pyc" |xargs rm || true
+	find test -name "*.pyc" |xargs rm || true
 	rm -r dist || true
 	rm -r build || true
 	rm -r wsgi_intercept.egg-info || true
@@ -30,5 +31,5 @@ pypi:
 docs: docs/*.rst
 	cd docs && $(MAKE) html
 
-release: clean test tagv pypi
+release: clean test tagv clean pypi
 
