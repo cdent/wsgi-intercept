@@ -106,6 +106,11 @@ try:
 except ImportError:
     from StringIO import StringIO as BytesIO
 
+try:
+    from urllib.parse import unquote as url_unquote
+except ImportError:
+    from urllib import unquote as url_unquote
+
 import traceback
 
 debuglevel = 0
@@ -217,6 +222,11 @@ def make_environ(inp, host, port, script_name):
 
     method, url, protocol = method_line.split(' ')
 
+    # Store the URI as requested by the user, without modification
+    # so that PATH_INFO munging can be corrected.
+    environ['REQUEST_URI'] = url
+    environ['RAW_URI'] = url
+
     # clean the script_name off of the url, if it's there.
     if not url.startswith(script_name):
         script_name = ''                # @CTB what to do -- bad URL.  scrap?
@@ -224,7 +234,7 @@ def make_environ(inp, host, port, script_name):
         url = url[len(script_name):]
 
     url = url.split('?', 1)
-    path_info = url[0]
+    path_info = url_unquote(url[0])
     query_string = ""
     if len(url) == 2:
         query_string = url[1]
