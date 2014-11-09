@@ -28,6 +28,8 @@ def test_http_other_port():
     with InstalledApp(wsgi_app.simple_app, host=HOST, port=8080) as app:
         url_lib.urlopen('http://some_hopefully_nonexistant_domain:8080/')
         assert app.success()
+        environ = app.get_internals()
+        assert environ['wsgi.url_scheme'] == 'http'
 
 
 def test_https():
@@ -40,6 +42,8 @@ def test_https_default_port():
     with InstalledApp(wsgi_app.simple_app, host=HOST, port=443) as app:
         url_lib.urlopen('https://some_hopefully_nonexistant_domain/')
         assert app.success()
+        environ = app.get_internals()
+        assert environ['wsgi.url_scheme'] == 'https'
 
 
 def test_app_error():

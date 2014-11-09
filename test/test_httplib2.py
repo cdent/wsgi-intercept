@@ -36,6 +36,9 @@ def test_http_other_port():
         assert content == b'WSGI intercept successful!\n'
         assert app.success()
 
+        environ = app.get_internals()
+        assert environ['wsgi.url_scheme'] == 'http'
+
 
 def test_bogus_domain():
     with InstalledApp(wsgi_app.simple_app, host=HOST, port=80):
@@ -56,6 +59,9 @@ def test_https_default_port():
         http = httplib2.Http()
         resp, content = http.request('https://some_hopefully_nonexistant_domain/')
         assert app.success()
+
+        environ = app.get_internals()
+        assert environ['wsgi.url_scheme'] == 'https'
 
 
 def test_app_error():

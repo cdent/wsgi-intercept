@@ -26,6 +26,16 @@ def test_simple_override_default_port():
         assert app.success()
 
 
+def test_https_in_environ():
+    with InstalledApp(wsgi_app.simple_app, host=HOST, port=443) as app:
+        http = httplib2.Http()
+        resp, content = http.request(
+            'https://some_hopefully_nonexistant_domain/', 'GET')
+        assert app.success()
+        internal_env = app.get_internals()
+        assert internal_env['wsgi.url_scheme'] == 'https'
+
+
 def test_more_interesting():
     expected_uri = '/%E4%B8%96%E4%B8%8A%E5%8E%9F%E4%BE%86%E9%82%84%E6%9C%89%E3%80%8C%E7%BE%9A%E7%89%9B%E3%80%8D%E9%80%99%E7%A8%AE%E5%8B%95%E7%89%A9%EF%BC%81%2Fbarney?bar=baz%20zoom'
     with InstalledApp(wsgi_app.more_interesting_app, host=HOST) as app:

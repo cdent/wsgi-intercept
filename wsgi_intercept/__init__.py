@@ -336,7 +336,7 @@ class wsgi_fake_socket:
         data has been sent to the socket by the request class;
      2. non-persistent (i.e. non-HTTP/1.1) connections.
     """
-    def __init__(self, app, host, port, script_name):
+    def __init__(self, app, host, port, script_name, https=False):
         self.app = app                  # WSGI app object
         self.host = host
         self.port = port
@@ -346,6 +346,7 @@ class wsgi_fake_socket:
         self.write_results = []          # results from the 'write_fn'
         self.results = None             # results from running the app
         self.output = BytesIO()        # all output from the app, incl headers
+        self.https = https
 
     def makefile(self, *args, **kwargs):
         """
@@ -392,6 +393,8 @@ class wsgi_fake_socket:
 
         # build the environ dictionary.
         environ = make_environ(inp, self.host, self.port, self.script_name)
+        if self.https:
+            environ['wsgi.url_scheme'] = 'https'
 
         # run the application.
         try:
@@ -549,7 +552,7 @@ class WSGI_HTTPSConnection(HTTPSConnection, WSGI_HTTPConnection):
                     sys.stderr.write('INTERCEPTING call to %s:%s\n' %
                                      (self.host, self.port,))
                 self.sock = wsgi_fake_socket(app, self.host, self.port,
-                                             script_name)
+                                             script_name, https=True)
             else:
                 HTTPSConnection.connect(self)
 

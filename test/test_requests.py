@@ -29,6 +29,8 @@ def test_http_other_port():
         resp = requests.get('http://some_hopefully_nonexistant_domain:8080/')
         assert resp.content == b'WSGI intercept successful!\n'
         assert app.success()
+        environ = app.get_internals()
+        assert environ['wsgi.url_scheme'] == 'http'
 
 
 def test_bogus_domain():
@@ -50,6 +52,8 @@ def test_https_default_port():
         resp = requests.get('https://some_hopefully_nonexistant_domain/')
         assert resp.content == b'WSGI intercept successful!\n'
         assert app.success()
+        environ = app.get_internals()
+        assert environ['wsgi.url_scheme'] == 'https'
 
 
 def test_app_error():
