@@ -41,9 +41,3 @@ such as the interceptor for `mechanize` ought to work when imported
 independently (see [related
 conversation](https://github.com/cdent/python3-wsgi-intercept/issues/16).
 
-To Do
------
-
-* https support using `http.client` is only somewhat implemented:
-  If intercepting an HTTPS domain, requests to other HTTPS domains
-  fail.
