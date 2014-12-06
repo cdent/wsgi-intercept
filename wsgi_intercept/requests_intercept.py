@@ -22,6 +22,8 @@ class HTTP_WSGIInterceptor(WSGI_HTTPConnection, HTTPConnection):
 
 
 class HTTPS_WSGIInterceptor(WSGI_HTTPSConnection, HTTPSConnection):
+    is_verified = True
+
     def __init__(self, *args, **kwargs):
         if 'strict' in kwargs and sys.version_info > (3, 0):
             kwargs.pop('strict')
