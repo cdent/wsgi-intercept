@@ -561,7 +561,16 @@ class WSGI_HTTPSConnection(HTTPSConnection, WSGI_HTTPConnection):
                     if not hasattr(self, 'cert_file'):
                         self.cert_file = None
                     if not hasattr(self, '_context'):
-                        self._context = ssl.create_default_context()
+                        try:
+                            self._context = ssl.create_default_context()
+                        except AttributeError:
+                            self._context = ssl.SSLContext(ssl.PROTOCOL_SSLv23)
+                            self._context.options |= ssl.OP_NO_SSLv2
+                            if not hasattr(self, 'check_hostname'):
+                                self._check_hostname = (self._context.verify_mode
+                                        != ssl.CERT_NONE)
+                            else:
+                                self._check_hostname = self.check_hostname
                 except (ImportError, AttributeError):
                     pass
                 HTTPSConnection.connect(self)
