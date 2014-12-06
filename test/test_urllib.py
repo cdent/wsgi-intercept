@@ -50,3 +50,15 @@ def test_app_error():
     with InstalledApp(wsgi_app.raises_app, host=HOST, port=80):
         with py.test.raises(WSGIAppError):
             url_lib.urlopen('http://some_hopefully_nonexistant_domain/')
+
+
+def test_http_not_intercepted():
+    with InstalledApp(wsgi_app.simple_app, host=HOST, port=80) as app:
+        response = url_lib.urlopen('http://google.com/')
+        assert 200 <= int(response.code) < 400
+
+
+def test_https_not_intercepted():
+    with InstalledApp(wsgi_app.simple_app, host=HOST, port=443) as app:
+        response = url_lib.urlopen('https://google.com/')
+        assert 200 <= int(response.code) < 400

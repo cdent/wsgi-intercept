@@ -60,7 +60,6 @@ def test_http_not_intercepted():
         assert 200 <= int(response.status) < 400
 
 
-@py.test.mark.xfail()
 def test_https_not_intercepted():
     with InstalledApp(wsgi_app.raises_app, host=HOST, port=443):
         http_client = http_lib.HTTPSConnection('google.com')

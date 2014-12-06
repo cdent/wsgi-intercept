@@ -554,6 +554,16 @@ class WSGI_HTTPSConnection(HTTPSConnection, WSGI_HTTPConnection):
                 self.sock = wsgi_fake_socket(app, self.host, self.port,
                                              script_name, https=True)
             else:
+                try:
+                    import ssl
+                    if not hasattr(self, 'key_file'):
+                        self.key_file = None
+                    if not hasattr(self, 'cert_file'):
+                        self.cert_file = None
+                    if not hasattr(self, '_context'):
+                        self._context = ssl.create_default_context()
+                except (ImportError, AttributeError):
+                    pass
                 HTTPSConnection.connect(self)
 
         except Exception:
