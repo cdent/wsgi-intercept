@@ -107,7 +107,7 @@ except ImportError:
     from StringIO import StringIO as BytesIO
 
 try:
-    from urllib.parse import unquote as url_unquote
+    from urllib.parse import unquote_to_bytes as url_unquote
 except ImportError:
     from urllib import unquote as url_unquote
 
@@ -249,6 +249,14 @@ def make_environ(inp, host, port, script_name):
     #
     # fill out our dictionary.
     #
+
+    # In Python3 turn the bytes of the path info into a string of
+    # latin-1 code points, because that's what the spec says we must
+    # do to be like a server. Later various libraries will be forced
+    # to decode and then reencode to get the UTF-8 that everyone
+    # wants.
+    if sys.version_info[0] > 2:
+        path_info = path_info.decode('latin-1')
 
     environ.update({
         "wsgi.version": (1, 0),
