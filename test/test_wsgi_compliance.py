@@ -1,6 +1,10 @@
 import sys
 import py.test
-from wsgi_intercept import httplib2_intercept, url_unquote
+try:
+    from urllib.parse import unquote
+except ImportError:
+    from urllib import unquote
+from wsgi_intercept import httplib2_intercept
 from test import wsgi_app
 from test.install import installer_class
 import httplib2
@@ -46,12 +50,17 @@ def test_more_interesting():
             headers={'Accept': 'application/json'})
         internal_env = app.get_internals()
 
-        expected_path_info = url_unquote(expected_uri.split('?')[0])
+        expected_path_info = unquote(expected_uri.split('?')[0])
         assert internal_env['REQUEST_URI'] == expected_uri
         assert internal_env['RAW_URI'] == expected_uri
-        assert internal_env['PATH_INFO'] == expected_path_info
         assert internal_env['QUERY_STRING'] == 'bar=baz%20zoom'
         assert internal_env['HTTP_ACCEPT'] == 'application/json'
+
+        # Do the rather painful wsgi encoding dance.
+        if sys.version_info[0] > 2:
+            assert internal_env['PATH_INFO'].encode('latin-1').decode('UTF-8') == expected_path_info
+        else:
+            assert internal_env['PATH_INFO'].decode('UTF-8') == expected_path_info.decode('UTF-8')
 
 
 def test_script_name():
