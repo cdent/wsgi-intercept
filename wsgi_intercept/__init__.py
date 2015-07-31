@@ -92,7 +92,7 @@ Additional documentation is available on `Read The Docs`_.
 """
 from __future__ import print_function
 
-__version__ = '0.10.1'
+__version__ = '0.10.2'
 
 
 import sys
