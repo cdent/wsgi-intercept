@@ -53,7 +53,7 @@ The best way to figure out how to use interception is to inspect
 `the tests`_. More comprehensive documentation available upon
 request.
 
-.. _the tests: https://github.com/cdent/python3-wsgi-intercept/tree/master/test
+.. _the tests: https://github.com/cdent/wsgi-intercept/tree/master/test
 
 
 History
@@ -86,7 +86,7 @@ failing tests, et cetera using the Issue Tracker.
 
 Additional documentation is available on `Read The Docs`_.
 
-.. _GitHub: http://github.com/cdent/python3-wsgi-intercept
+.. _GitHub: http://github.com/cdent/wsgi-intercept
 .. _Read The Docs: http://wsgi-intercept.readthedocs.org/en/latest/
 
 """

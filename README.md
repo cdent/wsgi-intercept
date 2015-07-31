@@ -39,5 +39,5 @@ client, require a version of `wsgi_intercept<0.6`. Another option
 to keep in mind is that interceptor code from earlier versions,
 such as the interceptor for `mechanize` ought to work when imported
 independently (see [related
-conversation](https://github.com/cdent/python3-wsgi-intercept/issues/16).
+conversation](https://github.com/cdent/wsgi-intercept/issues/16).
 
