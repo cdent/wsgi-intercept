@@ -85,3 +85,12 @@ def test_encoding_errors():
             response, content = http.request(
                 'http://some_hopefully_nonexistant_domain/boom/baz',
                 headers={'Accept': u'application/\u2603'})
+
+
+def test_post_status_headers():
+    with InstalledApp(wsgi_app.post_status_headers_app, host=HOST) as app:
+        http = httplib2.Http()
+        resp, content = http.request(
+            'http://some_hopefully_nonexistant_domain/', 'GET')
+        assert app.success()
+        assert resp.get('content-type') == 'text/plain'

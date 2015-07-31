@@ -375,25 +375,15 @@ class wsgi_fake_socket:
 
         # dynamically construct the start_response function for no good reason.
 
+        self.headers = []
+
         def start_response(status, headers, exc_info=None):
             # construct the HTTP request.
             self.output.write(b"HTTP/1.0 " + status.encode('utf-8') + b"\n")
-
-            for k, v in headers:
-                try:
-                    k = k.encode('utf-8')
-                except AttributeError:
-                    pass
-                try:
-                    v = v.encode('utf-8')
-                except AttributeError:
-                    pass
-                self.output.write(k + b': ' + v + b"\n")
-            self.output.write(b'\n')
-
-            def write_fn(s):
-                self.write_results.append(s)
-            return write_fn
+            # Keep the reference of the headers list to write them only
+            # when the whole application have been processed
+            self.headers = headers
+            return self.write_results.append
 
         # construct the wsgi.input file from everything that's been
         # written to this "socket".
@@ -410,6 +400,20 @@ class wsgi_fake_socket:
         except Exception as error:
             raise WSGIAppError(error, sys.exc_info())
         self.result = iter(app_result)
+
+        # send the headers
+
+        for k, v in self.headers:
+            try:
+                k = k.encode('utf-8')
+            except AttributeError:
+                pass
+            try:
+                v = v.encode('utf-8')
+            except AttributeError:
+                pass
+            self.output.write(k + b': ' + v + b"\n")
+        self.output.write(b'\n')
 
         ###
 
