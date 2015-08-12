@@ -48,7 +48,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'wsgi_intercept'
-copyright = '2014, Titus Brown, Kumar McMillan, Chris Dent'
+copyright = '2015, Titus Brown, Kumar McMillan, Chris Dent, Sasha Hart'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
