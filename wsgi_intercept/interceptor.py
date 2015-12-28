@@ -31,7 +31,7 @@ class Interceptor(object):
         else:
             self.host = host
             self.port = int(port)
-            self.script_name = prefix or '/'
+            self.script_name = prefix or ''
             self.url = self._url_from_primitives()
 
         self._module = import_module('.%s' % self.MODULE_NAME,

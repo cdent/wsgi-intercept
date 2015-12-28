@@ -101,7 +101,7 @@ def test_httplib2_interceptor_https_host():
     port = 443
     http = Http()
     with Httplib2Interceptor(app=app, host=hostname, port=port) as url:
-        assert url == 'https://%s/' % hostname
+        assert url == 'https://%s' % hostname
         response, content = http.request(url)
         assert response.status == 200
         assert 'WSGI intercept successful!' in content.decode('utf-8')

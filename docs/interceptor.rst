@@ -7,7 +7,7 @@ Interceptor
 
 Example using `httplib2`, others are much the same:
 
-.. testcode:: 
+.. testcode::
 
     import httplib2
     from wsgi_intercept.interceptor import Httplib2Interceptor
