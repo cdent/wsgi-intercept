@@ -38,3 +38,7 @@ def install_opener():
 
 def uninstall_opener():
     url_lib.install_opener(None)
+
+
+install = install_opener
+uninstall = uninstall_opener

@@ -57,6 +57,11 @@ class Interceptor(object):
         self._module.uninstall()
 
 
+class HttpClientInterceptor(Interceptor):
+
+    MODULE_NAME = 'http_client_intercept'
+
+
 class Httplib2Interceptor(Interceptor):
 
     MODULE_NAME = 'httplib2_intercept'
@@ -65,3 +70,8 @@ class Httplib2Interceptor(Interceptor):
 class RequestsInterceptor(Interceptor):
 
     MODULE_NAME = 'requests_intercept'
+
+
+class UrllibInterceptor(Interceptor):
+
+    MODULE_NAME = 'urllib_intercept'
