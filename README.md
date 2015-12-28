@@ -4,7 +4,7 @@ python3-wsgi-intercept
 [![travis](https://secure.travis-ci.org/cdent/python3-wsgi-intercept.png)](https://secure.travis-ci.org/cdent/python3-wsgi-intercept)
 
 Python3 port of the important bits of wsgi-intercept, now working for
-2.6, 2.7, 3.3 and 3.4.
+2.7, 3.3, 3.4 and 3.5.
 
 Documentation is available on [Read The
 Docs](http://wsgi-intercept.readthedocs.org/en/latest/).
@@ -40,4 +40,3 @@ to keep in mind is that interceptor code from earlier versions,
 such as the interceptor for `mechanize` ought to work when imported
 independently (see [related
 conversation](https://github.com/cdent/wsgi-intercept/issues/16).
-
