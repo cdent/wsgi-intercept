@@ -170,7 +170,7 @@ def test_urllib_interceptor_host():
         url = 'http://%s:%s/' % (hostname, port)
         response = urlopen(url)
         assert response.code == 200
-        assert 'WSGI intercept successful!' in response.read()
+        assert 'WSGI intercept successful!' in response.read().decode('utf-8')
 
 
 def test_urllib_interceptor_url():
@@ -180,7 +180,7 @@ def test_urllib_interceptor_url():
     with UrllibInterceptor(app=app, url=url):
         response = urlopen(url)
         assert response.code == 200
-        assert 'WSGI intercept successful!' in response.read()
+        assert 'WSGI intercept successful!' in response.read().decode('utf-8')
 
 
 def test_urllib_in_out():
@@ -190,7 +190,7 @@ def test_urllib_in_out():
     with UrllibInterceptor(app=app, url=url):
         response = urlopen(url)
         assert response.code == 200
-        assert 'WSGI intercept successful!' in response.read()
+        assert 'WSGI intercept successful!' in response.read().decode('utf-8')
 
     # outside the context manager the intercept does not work
     with py.test.raises(URLError):
