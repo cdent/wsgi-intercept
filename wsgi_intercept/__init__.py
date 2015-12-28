@@ -368,9 +368,6 @@ class wsgi_fake_socket:
           3. build an environment dict out of the traffic in inp;
           4. run the WSGI app & grab the result object;
           5. concatenate & return the result(s) read from the result object.
-
-        @CTB: 'start_response' should return a function that writes
-        directly to self.result, too.
         """
 
         # dynamically construct the start_response function for no good reason.
