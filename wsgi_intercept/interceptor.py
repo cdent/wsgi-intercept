@@ -17,19 +17,36 @@ class Interceptor(object):
 
         if url:
             self._init_from_url(url)
+            self.url = url
         else:
             self.host = host
             self.port = int(port)
-            self.script_name = prefix or ''
+            self.script_name = prefix or '/'
+            self.url = self._url_from_primitives()
 
         self._module = import_module('.%s' % self.MODULE_NAME,
                                      package='wsgi_intercept')
 
     def __enter__(self):
         self.install_intercept()
+        return self.url
 
     def __exit__(self, exc_type, value, traceback):
         self.uninstall_intercept()
+
+    def _url_from_primitives(self):
+        if self.port == 443:
+            scheme = 'https'
+        else:
+            scheme = 'http'
+
+        if self.port and self.port not in [443, 80]:
+            port = ':%s' % self.port
+        else:
+            port = ''
+        netloc = self.host + port
+
+        return urlparse.urlunsplit((scheme, netloc, self.script_name, None, None))
 
     def _init_from_url(self, url):
         parsed_url = urlparse.urlsplit(url)

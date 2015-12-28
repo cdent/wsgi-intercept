@@ -29,12 +29,14 @@ def app():
 def test_interceptor_instance():
     hostname = str(uuid4())
     port = 9999
-    interceptor = Httplib2Interceptor(app=app, host=hostname, port=port)
+    interceptor = Httplib2Interceptor(app=app, host=hostname, port=port,
+                                      prefix='/foobar')
     assert isinstance(interceptor, Interceptor)
     assert interceptor.app == app
     assert interceptor.host == hostname
     assert interceptor.port == port
-    assert interceptor.script_name == ''
+    assert interceptor.script_name == '/foobar'
+    assert interceptor.url == 'http://%s:%s/foobar' % (hostname, port)
 
 
 ### http_lib ###
@@ -44,7 +46,6 @@ def test_httpclient_interceptor_host():
     port = 9999
     http = Http()
     with HttpClientInterceptor(app=app, host=hostname, port=port):
-        url = 'http://%s:%s/' % (hostname, port)
         client = http_client.HTTPConnection(hostname, port)
         client.request('GET', '/')
         response = client.getresponse()
@@ -90,8 +91,18 @@ def test_httplib2_interceptor_host():
     hostname = str(uuid4())
     port = 9999
     http = Http()
-    with Httplib2Interceptor(app=app, host=hostname, port=port):
-        url = 'http://%s:%s/' % (hostname, port)
+    with Httplib2Interceptor(app=app, host=hostname, port=port) as url:
+        response, content = http.request(url)
+        assert response.status == 200
+        assert 'WSGI intercept successful!' in content.decode('utf-8')
+
+
+def test_httplib2_interceptor_https_host():
+    hostname = str(uuid4())
+    port = 443
+    http = Http()
+    with Httplib2Interceptor(app=app, host=hostname, port=port) as url:
+        assert url == 'https://%s/' % hostname
         response, content = http.request(url)
         assert response.status == 200
         assert 'WSGI intercept successful!' in content.decode('utf-8')
@@ -102,8 +113,8 @@ def test_httplib2_interceptor_url():
     port = 9999
     url = 'http://%s:%s/' % (hostname, port)
     http = Http()
-    with Httplib2Interceptor(app=app, url=url):
-        response, content = http.request(url)
+    with Httplib2Interceptor(app=app, url=url) as target_url:
+        response, content = http.request(target_url)
         assert response.status == 200
         assert 'WSGI intercept successful!' in content.decode('utf-8')
 
@@ -113,8 +124,8 @@ def test_httplib2_in_out():
     port = 9999
     url = 'http://%s:%s/' % (hostname, port)
     http = Http()
-    with Httplib2Interceptor(app=app, url=url):
-        response, content = http.request(url)
+    with Httplib2Interceptor(app=app, url=url) as target_url:
+        response, content = http.request(target_url)
         assert response.status == 200
         assert 'WSGI intercept successful!' in content.decode('utf-8')
 
@@ -129,8 +140,7 @@ def test_requests_interceptor_host():
     hostname = str(uuid4())
     port = 9999
     http = Http()
-    with RequestsInterceptor(app=app, host=hostname, port=port):
-        url = 'http://%s:%s/' % (hostname, port)
+    with RequestsInterceptor(app=app, host=hostname, port=port) as url:
         response = requests.get(url)
         assert response.status_code == 200
         assert 'WSGI intercept successful!' in response.text
@@ -140,8 +150,8 @@ def test_requests_interceptor_url():
     hostname = str(uuid4())
     port = 9999
     url = 'http://%s:%s/' % (hostname, port)
-    with RequestsInterceptor(app=app, url=url):
-        response = requests.get(url)
+    with RequestsInterceptor(app=app, url=url) as target_url:
+        response = requests.get(target_url)
         assert response.status_code == 200
         assert 'WSGI intercept successful!' in response.text
 
@@ -150,8 +160,8 @@ def test_requests_in_out():
     hostname = str(uuid4())
     port = 9999
     url = 'http://%s:%s/' % (hostname, port)
-    with RequestsInterceptor(app=app, url=url):
-        response = requests.get(url)
+    with RequestsInterceptor(app=app, url=url) as target_url:
+        response = requests.get(target_url)
         assert response.status_code == 200
         assert 'WSGI intercept successful!' in response.text
 
@@ -166,8 +176,7 @@ def test_urllib_interceptor_host():
     hostname = str(uuid4())
     port = 9999
     http = Http()
-    with UrllibInterceptor(app=app, host=hostname, port=port):
-        url = 'http://%s:%s/' % (hostname, port)
+    with UrllibInterceptor(app=app, host=hostname, port=port) as url:
         response = urlopen(url)
         assert response.code == 200
         assert 'WSGI intercept successful!' in response.read().decode('utf-8')
@@ -177,8 +186,8 @@ def test_urllib_interceptor_url():
     hostname = str(uuid4())
     port = 9999
     url = 'http://%s:%s/' % (hostname, port)
-    with UrllibInterceptor(app=app, url=url):
-        response = urlopen(url)
+    with UrllibInterceptor(app=app, url=url) as target_url:
+        response = urlopen(target_url)
         assert response.code == 200
         assert 'WSGI intercept successful!' in response.read().decode('utf-8')
 
@@ -187,8 +196,8 @@ def test_urllib_in_out():
     hostname = str(uuid4())
     port = 9999
     url = 'http://%s:%s/' % (hostname, port)
-    with UrllibInterceptor(app=app, url=url):
-        response = urlopen(url)
+    with UrllibInterceptor(app=app, url=url) as target_url:
+        response = urlopen(target_url)
         assert response.code == 200
         assert 'WSGI intercept successful!' in response.read().decode('utf-8')
 
