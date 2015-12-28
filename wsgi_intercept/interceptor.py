@@ -9,7 +9,7 @@ import wsgi_intercept
 
 class Interceptor(object):
 
-    def __init__(self, app, host=None, port=None, prefix=None, url=None):
+    def __init__(self, app, host=None, port=80, prefix=None, url=None):
         assert app
         assert (host and port) or (url)
 
@@ -26,13 +26,10 @@ class Interceptor(object):
                                      package='wsgi_intercept')
 
     def __enter__(self):
-        self._install_intercept()
-        wsgi_intercept.add_wsgi_intercept(self.host, self.port, self.app,
-                                          script_name=self.script_name)
+        self.install_intercept()
 
     def __exit__(self, exc_type, value, traceback):
-        wsgi_intercept.remove_wsgi_intercept(self.host, self.port)
-        self._uninstall_intercept()
+        self.uninstall_intercept()
 
     def _init_from_url(self, url):
         parsed_url = urlparse.urlsplit(url)
@@ -50,10 +47,13 @@ class Interceptor(object):
         self.host = host
         self.port = int(port)
 
-    def _install_intercept(self):
+    def install_intercept(self):
         self._module.install()
+        wsgi_intercept.add_wsgi_intercept(self.host, self.port, self.app,
+                                          script_name=self.script_name)
 
-    def _uninstall_intercept(self):
+    def uninstall_intercept(self):
+        wsgi_intercept.remove_wsgi_intercept(self.host, self.port)
         self._module.uninstall()
 
 
