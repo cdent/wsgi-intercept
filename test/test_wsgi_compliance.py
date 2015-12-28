@@ -75,9 +75,6 @@ def test_script_name():
         assert internal_env['PATH_INFO'] == '/boom/baz'
 
 
-@py.test.mark.xfail(
-    sys.version_info[0] == 2 and sys.version_info[1] <= 6,
-    reason='works okay on 2.7 and beyond. why?')
 def test_encoding_errors():
     with InstalledApp(wsgi_app.more_interesting_app, host=HOST):
         http = httplib2.Http()
