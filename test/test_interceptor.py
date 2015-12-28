@@ -107,6 +107,16 @@ def test_httplib2_interceptor_https_host():
         assert 'WSGI intercept successful!' in content.decode('utf-8')
 
 
+def test_httplib2_interceptor_no_host():
+    # no hostname or port, one will be generated automatically
+    # we never actually know what it is
+    http = Http()
+    with Httplib2Interceptor(app=app) as url:
+        response, content = http.request(url)
+        assert response.status == 200
+        assert 'WSGI intercept successful!' in content.decode('utf-8')
+
+
 def test_httplib2_interceptor_url():
     hostname = str(uuid4())
     port = 9999

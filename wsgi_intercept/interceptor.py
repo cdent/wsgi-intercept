@@ -2,6 +2,7 @@
 """
 
 from importlib import import_module
+from uuid import uuid4
 
 from six.moves.urllib import parse as urlparse
 
@@ -17,11 +18,16 @@ class Interceptor(object):
     process of addition and removal.
 
     Each Interceptor subclass is associated with a specific http library.
+
+    Each class may be passed a url or a host and a port. If no args are passed
+    a hostname will be automatically generated and the resulting url will be
+    returned by the context manager.
     """
 
     def __init__(self, app, host=None, port=80, prefix=None, url=None):
         assert app
-        assert (host and port) or (url)
+        if (not host and not url):
+            host = str(uuid4())
 
         self.app = app
 
