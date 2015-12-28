@@ -48,7 +48,7 @@ def test_httpclient_interceptor_host():
         client = http_client.HTTPConnection(hostname, port)
         client.request('GET', '/')
         response = client.getresponse()
-        content = response.read()
+        content = response.read().decode('utf-8')
         assert response.status == 200
         assert 'WSGI intercept successful!' in content
 
@@ -61,7 +61,7 @@ def test_httpclient_interceptor_url():
         client = http_client.HTTPConnection(hostname, port)
         client.request('GET', '/')
         response = client.getresponse()
-        content = response.read()
+        content = response.read().decode('utf-8')
         assert response.status == 200
         assert 'WSGI intercept successful!' in content
 
@@ -74,7 +74,7 @@ def test_httpclient_in_out():
         client = http_client.HTTPConnection(hostname, port)
         client.request('GET', '/')
         response = client.getresponse()
-        content = response.read()
+        content = response.read().decode('utf-8')
         assert response.status == 200
         assert 'WSGI intercept successful!' in content
 
