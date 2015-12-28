@@ -35,7 +35,7 @@ def test_httplib2_interceptor_host():
         url = 'http://%s:%s/' % (hostname, port)
         response, content = http.request(url)
         assert response.status == 200
-        assert 'WSGI intercept successful!' in content
+        assert 'WSGI intercept successful!' in content.decode('utf-8')
 
 
 def test_httplib2_interceptor_url():
@@ -46,7 +46,7 @@ def test_httplib2_interceptor_url():
     with Httplib2Interceptor(app=app, url=url):
         response, content = http.request(url)
         assert response.status == 200
-        assert 'WSGI intercept successful!' in content
+        assert 'WSGI intercept successful!' in content.decode('utf-8')
 
 
 def test_httplib2():
@@ -57,7 +57,7 @@ def test_httplib2():
     with Httplib2Interceptor(app=app, url=url):
         response, content = http.request(url)
         assert response.status == 200
-        assert 'WSGI intercept successful!' in content
+        assert 'WSGI intercept successful!' in content.decode('utf-8')
 
     # outside the context manager the intercept does not work
     with py.test.raises(ServerNotFoundError):
