@@ -46,7 +46,8 @@ class Interceptor(object):
             port = ''
         netloc = self.host + port
 
-        return urlparse.urlunsplit((scheme, netloc, self.script_name, None, None))
+        return urlparse.urlunsplit((scheme, netloc, self.script_name,
+                                    None, None))
 
     def _init_from_url(self, url):
         parsed_url = urlparse.urlsplit(url)

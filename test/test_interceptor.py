@@ -24,7 +24,7 @@ def app():
     return simple_app
 
 
-### Base ###
+# Base
 
 def test_interceptor_instance():
     hostname = str(uuid4())
@@ -39,12 +39,11 @@ def test_interceptor_instance():
     assert interceptor.url == 'http://%s:%s/foobar' % (hostname, port)
 
 
-### http_lib ###
+# http_lib
 
 def test_httpclient_interceptor_host():
     hostname = str(uuid4())
     port = 9999
-    http = Http()
     with HttpClientInterceptor(app=app, host=hostname, port=port):
         client = http_client.HTTPConnection(hostname, port)
         client.request('GET', '/')
@@ -85,7 +84,7 @@ def test_httpclient_in_out():
         client.request('GET', '/')
 
 
-### Httplib2 ###
+# Httplib2
 
 def test_httplib2_interceptor_host():
     hostname = str(uuid4())
@@ -134,12 +133,11 @@ def test_httplib2_in_out():
         http.request(url)
 
 
-### Requests ###
+# Requests
 
 def test_requests_interceptor_host():
     hostname = str(uuid4())
     port = 9999
-    http = Http()
     with RequestsInterceptor(app=app, host=hostname, port=port) as url:
         response = requests.get(url)
         assert response.status_code == 200
@@ -170,12 +168,11 @@ def test_requests_in_out():
         requests.get(url)
 
 
-### urllib ###
+# urllib
 
 def test_urllib_interceptor_host():
     hostname = str(uuid4())
     port = 9999
-    http = Http()
     with UrllibInterceptor(app=app, host=hostname, port=port) as url:
         response = urlopen(url)
         assert response.code == 200
