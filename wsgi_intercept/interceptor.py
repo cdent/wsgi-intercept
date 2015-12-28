@@ -1,4 +1,5 @@
-"""Context manager based interception."""
+"""Context manager based WSGI interception.
+"""
 
 from importlib import import_module
 
@@ -8,6 +9,15 @@ import wsgi_intercept
 
 
 class Interceptor(object):
+    """A convenience class over the guts of wsgi_intercept.
+
+    An Interceptor subclass provides a clean entry point to the wsgi_intercept
+    functionality in two ways: by encapsulating the interception addition and
+    removal in methods and by providing a context manager that automates the
+    process of addition and removal.
+
+    Each Interceptor subclass is associated with a specific http library.
+    """
 
     def __init__(self, app, host=None, port=80, prefix=None, url=None):
         assert app
@@ -76,20 +86,24 @@ class Interceptor(object):
 
 
 class HttpClientInterceptor(Interceptor):
+    """Interceptor for httplib and http.client."""
 
     MODULE_NAME = 'http_client_intercept'
 
 
 class Httplib2Interceptor(Interceptor):
+    """Interceptor for httplib2."""
 
     MODULE_NAME = 'httplib2_intercept'
 
 
 class RequestsInterceptor(Interceptor):
+    """Interceptor for requests."""
 
     MODULE_NAME = 'requests_intercept'
 
 
 class UrllibInterceptor(Interceptor):
+    """Interceptor for urllib2 and urllib.request."""
 
     MODULE_NAME = 'urllib_intercept'

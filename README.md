@@ -12,9 +12,9 @@ Docs](http://wsgi-intercept.readthedocs.org/en/latest/).
 What is it?
 ===========
 
-wsgi_intercept installs a WSGI application in place of a real URI for
-testing. See the [PyPI page](http://pypi.python.org/pypi/wsgi_intercept)
-page for more details.
+wsgi_intercept installs a WSGI application in place of a real host for
+testing while still preserving HTTP semantics. See the
+[PyPI page](http://pypi.python.org/pypi/wsgi_intercept) page for more details.
 
 Modern Version
 -----------

@@ -11,6 +11,7 @@ Examples
 .. toctree::
    :maxdepth: 1
 
+   interceptor
    http_client
    httplib2
    requests

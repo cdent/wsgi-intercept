@@ -1,4 +1,4 @@
-.PHONY: test clean tagv pypi release
+.PHONY: test clean tagv pypi release docs
 
 default:
 	@echo "Pick a target (e.g., clean, test)"
@@ -28,7 +28,7 @@ tagv:
 pypi:
 	python setup.py sdist upload
 
-docs: docs/*.rst
+docs:
 	cd docs && $(MAKE) html
 
 release: clean test tagv clean pypi
