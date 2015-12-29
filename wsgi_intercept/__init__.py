@@ -21,11 +21,9 @@ emulating a socket. If no intercept is registered for the host and port
 requested, those requests are passed on to the standard handler.
 
 The easiest way to use an intercept is to import an appropriate subclass
-of :class:`~wsgi_intercept.interceptor.Interceptor` and use that as a
+of ``~wsgi_intercept.interceptor.Interceptor`` and use that as a
 context manager over web requests that use the library associated with
-the subclass. For example:
-
-.. testcode::
+the subclass. For example::
 
     import httplib2
     from wsgi_intercept.intercept import Httplib2Interceptor
@@ -117,7 +115,7 @@ Additional documentation is available on `Read The Docs`_.
 """
 from __future__ import print_function
 
-__version__ = '1.0.0'
+__version__ = '1.0.1'
 
 
 import sys
