@@ -30,6 +30,9 @@ META = {
     'license': 'MIT License',
     'classifiers': CLASSIFIERS,
     'packages': find_packages(),
+    'install_requires': [
+        'six',
+    ],
     'extras_require': {
         'testing': [
             'pytest>=2.4',

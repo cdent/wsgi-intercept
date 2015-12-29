@@ -1,5 +1,5 @@
 
-"""installs a WSGI application in place of a real URI for testing.
+"""Installs a WSGI application in place of a real host for testing.
 
 Introduction
 ============
@@ -20,10 +20,35 @@ redirects specific server/port combinations into a WSGI application by
 emulating a socket. If no intercept is registered for the host and port
 requested, those requests are passed on to the standard handler.
 
-The functions ``add_wsgi_intercept(host, port, app_create_fn,
-script_name='')`` and ``remove_wsgi_intercept(host,port)`` specify
-which URLs should be redirect into what applications. Note especially
-that ``app_create_fn`` is a *function object* returning a WSGI
+The easiest way to use an intercept is to import an appropriate subclass
+of :class:`~wsgi_intercept.interceptor.Interceptor` and use that as a
+context manager over web requests that use the library associated with
+the subclass. For example:
+
+.. testcode::
+
+    import httplib2
+    from wsgi_intercept.intercept import Httplib2Interceptor
+    from mywsgiapp import app
+
+    def load_app():
+        return app
+
+    http = httplib2.Http()
+    with Httplib2Interceptor(load_app, host='example.com', port=80) as url:
+        response, content = http.request('%s%s' % (url, '/path'))
+        assert response.status == 200
+
+The interceptor class may aslo be used directly to install intercepts.
+See the module documentation for more information.
+
+Older versions required that the functions ``add_wsgi_intercept(host,
+port, app_create_fn, script_name='')`` and ``remove_wsgi_intercept(host,port)``
+be used to specify which URLs should be redirected into what applications.
+These methods are still available, but the ``Interceptor`` classes are likely
+easier to use for most use cases.
+
+Note especially that ``app_create_fn`` is a *function object* returning a WSGI
 application; ``script_name`` becomes ``SCRIPT_NAME`` in the WSGI app's
 environment, if set.
 
@@ -92,7 +117,7 @@ Additional documentation is available on `Read The Docs`_.
 """
 from __future__ import print_function
 
-__version__ = '0.10.3'
+__version__ = '0.99.0'
 
 
 import sys
