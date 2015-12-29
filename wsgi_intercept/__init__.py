@@ -117,7 +117,7 @@ Additional documentation is available on `Read The Docs`_.
 """
 from __future__ import print_function
 
-__version__ = '0.99.0'
+__version__ = '1.0.0'
 
 
 import sys
