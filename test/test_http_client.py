@@ -42,6 +42,18 @@ def test_other():
         assert app.success()
 
 
+def test_proxy_handling():
+    """Proxy variable no impact."""
+    with InstalledApp(wsgi_app.simple_app, host=HOST, port=80,
+                      proxy='some.host:1234') as app:
+        http_client = http_lib.HTTPConnection(HOST)
+        http_client.request('GET', '/')
+        content = http_client.getresponse().read()
+        http_client.close()
+        assert content == b'WSGI intercept successful!\n'
+        assert app.success()
+
+
 def test_app_error():
     with InstalledApp(wsgi_app.raises_app, host=HOST, port=80):
         http_client = http_lib.HTTPConnection(HOST)

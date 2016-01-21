@@ -1,9 +1,10 @@
+import os
 import wsgi_intercept
 
 
 class BaseInstalledApp(object):
     def __init__(self, app, host, port=80, script_name='',
-                 install=None, uninstall=None):
+                 install=None, uninstall=None, proxy=None):
         self.app = app
         self.host = host
         self.port = port
@@ -12,6 +13,7 @@ class BaseInstalledApp(object):
         self._uninstall = uninstall or (lambda: None)
         self._hits = 0
         self._internals = {}
+        self._proxy = proxy
 
     def __call__(self, environ, start_response):
         self._hits += 1
@@ -32,10 +34,14 @@ class BaseInstalledApp(object):
         wsgi_intercept.remove_wsgi_intercept(self.host, self.port)
 
     def install(self):
+        if self._proxy:
+            os.environ['http_proxy'] = self._proxy
         self._install()
         self.install_wsgi_intercept()
 
     def uninstall(self):
+        if self._proxy:
+            del os.environ['http_proxy']
         self.uninstall_wsgi_intercept()
         self._uninstall()
 
@@ -56,9 +62,9 @@ def installer_class(module=None, install=None, uninstall=None):
         uninstall = uninstall or getattr(module, 'uninstall', None)
 
     class InstalledApp(BaseInstalledApp):
-        def __init__(self, app, host, port=80, script_name=''):
+        def __init__(self, app, host, port=80, script_name='', proxy=None):
             BaseInstalledApp.__init__(
                 self, app=app, host=host, port=port, script_name=script_name,
-                install=install, uninstall=uninstall)
+                install=install, uninstall=uninstall, proxy=proxy)
 
     return InstalledApp

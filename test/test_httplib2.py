@@ -47,6 +47,17 @@ def test_bogus_domain():
             'httplib2_intercept.HTTP_WSGIInterceptorWithTimeout("_nonexistant_domain_").connect()')
 
 
+def test_proxy_handling():
+    """Proxy has no impact."""
+    with InstalledApp(wsgi_app.simple_app, host=HOST, port=80,
+                      proxy='some_proxy.com:1234') as app:
+        http = httplib2.Http()
+        resp, content = http.request(
+            'http://some_hopefully_nonexistant_domain:80/')
+        assert content == b'WSGI intercept successful!\n'
+        assert app.success()
+
+
 def test_https():
     with InstalledApp(wsgi_app.simple_app, host=HOST, port=443) as app:
         http = httplib2.Http()

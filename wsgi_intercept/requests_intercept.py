@@ -1,6 +1,7 @@
 """Intercept HTTP connections that use `requests <http://docs.python-requests.org/en/latest/>`_.
 """
 
+import os
 import sys
 
 from . import WSGI_HTTPConnection, WSGI_HTTPSConnection, wsgi_fake_socket
@@ -32,6 +33,9 @@ class HTTPS_WSGIInterceptor(WSGI_HTTPSConnection, HTTPSConnection):
 
 
 def install():
+    if 'http_proxy' in os.environ or 'https_proxy' in os.environ:
+        raise RuntimeError(
+            'http_proxy or https_proxy set in environment, please unset')
     HTTPConnectionPool.ConnectionCls = HTTP_WSGIInterceptor
     HTTPSConnectionPool.ConnectionCls = HTTPS_WSGIInterceptor
 
