@@ -50,6 +50,11 @@ Note especially that ``app_create_fn`` is a *function object* returning a WSGI
 application; ``script_name`` becomes ``SCRIPT_NAME`` in the WSGI app's
 environment, if set.
 
+Note also that if ``http_proxy`` or ``https_proxy`` is set in the environment
+this can cause difficulties with some of the intercepted libraries. If 
+requests or urllib is being used, these will raise an exception if one of
+those variables is set.
+
 Install
 =======
 
