@@ -67,12 +67,12 @@ def test_app_error():
 
 
 def test_http_not_intercepted():
-    with InstalledApp(wsgi_app.simple_app, host=HOST, port=80) as app:
+    with InstalledApp(wsgi_app.simple_app, host=HOST, port=80):
         response = url_lib.urlopen('http://google.com/')
         assert 200 <= int(response.code) < 400
 
 
 def test_https_not_intercepted():
-    with InstalledApp(wsgi_app.simple_app, host=HOST, port=443) as app:
+    with InstalledApp(wsgi_app.simple_app, host=HOST, port=443):
         response = url_lib.urlopen('https://google.com/')
         assert 200 <= int(response.code) < 400

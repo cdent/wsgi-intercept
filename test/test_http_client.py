@@ -64,7 +64,7 @@ def test_app_error():
 
 
 def test_http_not_intercepted():
-    with InstalledApp(wsgi_app.raises_app, host=HOST, port=80) as app:
+    with InstalledApp(wsgi_app.raises_app, host=HOST, port=80):
         http_client = http_lib.HTTPConnection('google.com')
         http_client.request('GET', '/')
         response = http_client.getresponse()

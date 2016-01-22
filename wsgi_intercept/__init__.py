@@ -51,7 +51,7 @@ application; ``script_name`` becomes ``SCRIPT_NAME`` in the WSGI app's
 environment, if set.
 
 Note also that if ``http_proxy`` or ``https_proxy`` is set in the environment
-this can cause difficulties with some of the intercepted libraries. If 
+this can cause difficulties with some of the intercepted libraries. If
 requests or urllib is being used, these will raise an exception if one of
 those variables is set.
 
@@ -120,7 +120,7 @@ Additional documentation is available on `Read The Docs`_.
 """
 from __future__ import print_function
 
-__version__ = '1.0.1'
+__version__ = '1.1.0'
 
 
 import sys
@@ -604,8 +604,9 @@ class WSGI_HTTPSConnection(HTTPSConnection, WSGI_HTTPConnection):
                             self._context = ssl.SSLContext(ssl.PROTOCOL_SSLv23)
                             self._context.options |= ssl.OP_NO_SSLv2
                             if not hasattr(self, 'check_hostname'):
-                                self._check_hostname = (self._context.verify_mode
-                                        != ssl.CERT_NONE)
+                                self._check_hostname = (
+                                    self._context.verify_mode != ssl.CERT_NONE
+                                )
                             else:
                                 self._check_hostname = self.check_hostname
                 except (ImportError, AttributeError):

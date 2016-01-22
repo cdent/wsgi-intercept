@@ -44,7 +44,8 @@ def test_bogus_domain():
     with InstalledApp(wsgi_app.simple_app, host=HOST, port=80):
         py.test.raises(
             gaierror,
-            'httplib2_intercept.HTTP_WSGIInterceptorWithTimeout("_nonexistant_domain_").connect()')
+            'httplib2_intercept.HTTP_WSGIInterceptorWithTimeout('
+            '"_nonexistant_domain_").connect()')
 
 
 def test_proxy_handling():
@@ -61,14 +62,16 @@ def test_proxy_handling():
 def test_https():
     with InstalledApp(wsgi_app.simple_app, host=HOST, port=443) as app:
         http = httplib2.Http()
-        resp, content = http.request('https://some_hopefully_nonexistant_domain:443/')
+        resp, content = http.request(
+            'https://some_hopefully_nonexistant_domain:443/')
         assert app.success()
 
 
 def test_https_default_port():
     with InstalledApp(wsgi_app.simple_app, host=HOST, port=443) as app:
         http = httplib2.Http()
-        resp, content = http.request('https://some_hopefully_nonexistant_domain/')
+        resp, content = http.request(
+            'https://some_hopefully_nonexistant_domain/')
         assert app.success()
 
         environ = app.get_internals()

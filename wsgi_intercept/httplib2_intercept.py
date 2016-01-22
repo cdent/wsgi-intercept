@@ -1,4 +1,5 @@
-"""Intercept HTTP connections that use `httplib2 <https://github.com/jcgregorio/httplib2>`_.
+"""Intercept HTTP connections that use
+`httplib2 <https://github.com/jcgregorio/httplib2>`_.
 """
 
 import sys

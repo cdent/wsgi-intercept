@@ -41,7 +41,10 @@ def test_https_in_environ():
 
 
 def test_more_interesting():
-    expected_uri = '/%E4%B8%96%E4%B8%8A%E5%8E%9F%E4%BE%86%E9%82%84%E6%9C%89%E3%80%8C%E7%BE%9A%E7%89%9B%E3%80%8D%E9%80%99%E7%A8%AE%E5%8B%95%E7%89%A9%EF%BC%81%2Fbarney?bar=baz%20zoom'
+    expected_uri = ('/%E4%B8%96%E4%B8%8A%E5%8E%9F%E4%BE%86%E9%82%84%E6'
+                    '%9C%89%E3%80%8C%E7%BE%9A%E7%89%9B%E3%80%8D%E9%80%99'
+                    '%E7%A8%AE%E5%8B%95%E7%89%A9%EF%BC%81%2Fbarney'
+                    '?bar=baz%20zoom')
     with InstalledApp(wsgi_app.more_interesting_app, host=HOST) as app:
         http = httplib2.Http()
         resp, content = http.request(
@@ -58,9 +61,11 @@ def test_more_interesting():
 
         # Do the rather painful wsgi encoding dance.
         if sys.version_info[0] > 2:
-            assert internal_env['PATH_INFO'].encode('latin-1').decode('UTF-8') == expected_path_info
+            assert internal_env['PATH_INFO'].encode('latin-1').decode(
+                'UTF-8') == expected_path_info
         else:
-            assert internal_env['PATH_INFO'].decode('UTF-8') == expected_path_info.decode('UTF-8')
+            assert internal_env['PATH_INFO'].decode(
+                'UTF-8') == expected_path_info.decode('UTF-8')
 
 
 def test_script_name():

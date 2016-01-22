@@ -1,4 +1,5 @@
-"""Intercept HTTP connections that use `requests <http://docs.python-requests.org/en/latest/>`_.
+"""Intercept HTTP connections that use
+`requests <http://docs.python-requests.org/en/latest/>`_.
 """
 
 import os

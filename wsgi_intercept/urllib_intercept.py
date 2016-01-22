@@ -1,4 +1,5 @@
-"""Intercept HTTP connections that use urllib.request (Py3) aka urllib2 (Python 2).
+"""Intercept HTTP connections that use urllib.request (Python 3)
+aka urllib2 (Python 2).
 """
 
 import os

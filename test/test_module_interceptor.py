@@ -19,7 +19,7 @@ def setup_module(module):
 
 
 def teardown_module(module):
-    intercept.uninstall_intercept()
+    module.intercept.uninstall_intercept()
 
 
 def test_simple_request():
