@@ -4,8 +4,8 @@ default:
 	@echo "Pick a target (e.g., clean, test)"
 
 clean:
-	find wsgi_intercept -name "*.pyc" |xargs rm || true
-	find test -name "*.pyc" |xargs rm || true
+	find wsgi_intercept test -name "*.py[co]" |xargs rm || true
+	find wsgi_intercept test -type d -name "__pycache__" |xargs rmdir || true
 	rm -r dist || true
 	rm -r build || true
 	rm -r wsgi_intercept.egg-info || true
