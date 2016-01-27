@@ -1,5 +1,12 @@
 import os
+import pytest
 import wsgi_intercept
+
+
+skipnetwork = pytest.mark.skipif(os.environ.get(
+    'WSGI_INTERCEPT_SKIP_NETWORK', 'False').lower() == 'true',
+    reason="skip network requested"
+)
 
 
 class BaseInstalledApp(object):

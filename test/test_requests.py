@@ -2,7 +2,7 @@ import os
 import py.test
 from wsgi_intercept import requests_intercept, WSGIAppError
 from test import wsgi_app
-from test.install import installer_class
+from test.install import installer_class, skipnetwork
 import requests
 from requests.exceptions import ConnectionError
 
@@ -75,12 +75,14 @@ def test_app_error():
             requests.get('http://some_hopefully_nonexistant_domain/')
 
 
+@skipnetwork
 def test_http_not_intercepted():
     with InstalledApp(wsgi_app.raises_app, host=HOST, port=80):
         resp = requests.get("http://google.com")
         assert resp.status_code >= 200 and resp.status_code < 300
 
 
+@skipnetwork
 def test_https_not_intercepted():
     with InstalledApp(wsgi_app.raises_app, host=HOST, port=80):
         resp = requests.get("https://google.com")
