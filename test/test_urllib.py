@@ -2,7 +2,7 @@ import os
 import py.test
 from wsgi_intercept import urllib_intercept, WSGIAppError
 from test import wsgi_app
-from test.install import installer_class
+from test.install import installer_class, skipnetwork
 try:
     import urllib.request as url_lib
 except ImportError:
@@ -66,12 +66,14 @@ def test_app_error():
             url_lib.urlopen('http://some_hopefully_nonexistant_domain/')
 
 
+@skipnetwork
 def test_http_not_intercepted():
     with InstalledApp(wsgi_app.simple_app, host=HOST, port=80):
         response = url_lib.urlopen('http://google.com/')
         assert 200 <= int(response.code) < 400
 
 
+@skipnetwork
 def test_https_not_intercepted():
     with InstalledApp(wsgi_app.simple_app, host=HOST, port=443):
         response = url_lib.urlopen('https://google.com/')

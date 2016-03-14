@@ -1,7 +1,7 @@
 import py.test
 from wsgi_intercept import http_client_intercept, WSGIAppError
 from test import wsgi_app
-from test.install import installer_class
+from test.install import installer_class, skipnetwork
 try:
     import http.client as http_lib
 except ImportError:
@@ -63,6 +63,7 @@ def test_app_error():
         http_client.close()
 
 
+@skipnetwork
 def test_http_not_intercepted():
     with InstalledApp(wsgi_app.raises_app, host=HOST, port=80):
         http_client = http_lib.HTTPConnection('google.com')
@@ -72,6 +73,7 @@ def test_http_not_intercepted():
         assert 200 <= int(response.status) < 400
 
 
+@skipnetwork
 def test_https_not_intercepted():
     with InstalledApp(wsgi_app.raises_app, host=HOST, port=443):
         http_client = http_lib.HTTPSConnection('google.com')

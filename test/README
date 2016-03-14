@@ -1,0 +1,6 @@
+
+If you wish to run the tests without those tests which speak to
+the internet (there are a few that validate that the intercept
+does not intercept). Set the WSGI_INTERCEPT_SKIP_NETWORK environment
+variable to "True". Any other value or no value will mean that
+the network tests will run.
