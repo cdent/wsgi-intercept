@@ -211,8 +211,8 @@ def test_urllib3_in_out():
         assert 'WSGI intercept successful!' in str(response.data)
 
     # outside the context manager the intercept does not work
-    with py.test.raises(urllib3.exceptions.MaxRetryError):
-        httppool.request('GET', url)
+    with py.test.raises(urllib3.exceptions.ProtocolError):
+        httppool.request('GET', url, retries=False)
 
 
 # urllib
