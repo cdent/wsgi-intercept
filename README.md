@@ -1,10 +1,7 @@
-python3-wsgi-intercept
+wsgi-intercept
 ======================
 
-[![travis](https://secure.travis-ci.org/cdent/python3-wsgi-intercept.png)](https://secure.travis-ci.org/cdent/python3-wsgi-intercept)
-
-Python3 port of the important bits of wsgi-intercept, now working for
-2.7, 3.3, 3.4 and 3.5.
+[![travis](https://secure.travis-ci.org/cdent/wsgi-intercept.png)](https://secure.travis-ci.org/cdent/wsgi-intercept)
 
 Documentation is available on [Read The
 Docs](http://wsgi-intercept.readthedocs.org/en/latest/).
@@ -15,28 +12,27 @@ What is it?
 wsgi_intercept installs a WSGI application in place of a real host for
 testing while still preserving HTTP semantics. See the
 [PyPI page](http://pypi.python.org/pypi/wsgi_intercept) page for more details.
+It works by intercepting the connection handling in http client
+libraries.
 
-Modern Version
------------
+Supported Libraries
+-------------------
 
-For the 2 and 3 version only some intercept functionality is provided,
-with a working implementation in Python 2 for:
+For Python 2.7 the following libraries are supported:
 
 * `urllib2`
 * `httplib`
 * `httplib2`
 * `requests`
+* `urllib3`
 
-and in Python 3 for:
+In Python 3:
 
 * `urllib.request`
 * `http.client`
 * `httplib2`
 * `requests`
+* `urllib3`
 
 If you are using Python 2 and need support for a different HTTP
-client, require a version of `wsgi_intercept<0.6`. Another option
-to keep in mind is that interceptor code from earlier versions,
-such as the interceptor for `mechanize` ought to work when imported
-independently (see [related
-conversation](https://github.com/cdent/wsgi-intercept/issues/16)).
+client, require a version of `wsgi_intercept<0.6`.
