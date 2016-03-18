@@ -188,7 +188,7 @@ def test_urllib3_interceptor_host():
     with Urllib3Interceptor(app=app, host=hostname, port=port) as url:
         response = httppool.request('GET', url)
         assert response.status == 200
-        assert 'WSGI intercept successful!' in response.data
+        assert 'WSGI intercept successful!' in str(response.data)
 
 
 def test_urllib3_interceptor_url():
@@ -198,7 +198,7 @@ def test_urllib3_interceptor_url():
     with Urllib3Interceptor(app=app, url=url) as target_url:
         response = httppool.request('GET', target_url)
         assert response.status == 200
-        assert 'WSGI intercept successful!' in response.data
+        assert 'WSGI intercept successful!' in str(response.data)
 
 
 def test_urllib3_in_out():
@@ -208,7 +208,7 @@ def test_urllib3_in_out():
     with Urllib3Interceptor(app=app, url=url) as target_url:
         response = httppool.request('GET', target_url)
         assert response.status == 200
-        assert 'WSGI intercept successful!' in response.data
+        assert 'WSGI intercept successful!' in str(response.data)
 
     # outside the context manager the intercept does not work
     with py.test.raises(urllib3.exceptions.MaxRetryError):
