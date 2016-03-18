@@ -9,6 +9,7 @@ from uuid import uuid4
 
 import py.test
 import requests
+import urllib3
 from httplib2 import Http, ServerNotFoundError
 from six.moves import http_client
 from six.moves.urllib.request import urlopen
@@ -16,9 +17,10 @@ from six.moves.urllib.error import URLError
 
 from wsgi_intercept.interceptor import (
     Interceptor, HttpClientInterceptor, Httplib2Interceptor,
-    RequestsInterceptor, UrllibInterceptor)
+    RequestsInterceptor, UrllibInterceptor, Urllib3Interceptor)
 from .wsgi_app import simple_app
 
+httppool = urllib3.PoolManager()
 
 def app():
     return simple_app
@@ -176,6 +178,41 @@ def test_requests_in_out():
     # outside the context manager the intercept does not work
     with py.test.raises(requests.ConnectionError):
         requests.get(url)
+
+
+# urllib3
+
+def test_urllib3_interceptor_host():
+    hostname = str(uuid4())
+    port = 9999
+    with Urllib3Interceptor(app=app, host=hostname, port=port) as url:
+        response = httppool.request('GET', url)
+        assert response.status == 200
+        assert 'WSGI intercept successful!' in response.data
+
+
+def test_urllib3_interceptor_url():
+    hostname = str(uuid4())
+    port = 9999
+    url = 'http://%s:%s/' % (hostname, port)
+    with Urllib3Interceptor(app=app, url=url) as target_url:
+        response = httppool.request('GET', target_url)
+        assert response.status == 200
+        assert 'WSGI intercept successful!' in response.data
+
+
+def test_urllib3_in_out():
+    hostname = str(uuid4())
+    port = 9999
+    url = 'http://%s:%s/' % (hostname, port)
+    with Urllib3Interceptor(app=app, url=url) as target_url:
+        response = httppool.request('GET', target_url)
+        assert response.status == 200
+        assert 'WSGI intercept successful!' in response.data
+
+    # outside the context manager the intercept does not work
+    with py.test.raises(urllib3.exceptions.MaxRetryError):
+        httppool.request('GET', url)
 
 
 # urllib

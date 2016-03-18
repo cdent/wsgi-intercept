@@ -109,6 +109,12 @@ class RequestsInterceptor(Interceptor):
     MODULE_NAME = 'requests_intercept'
 
 
+class Urllib3Interceptor(Interceptor):
+    """Interceptor for requests."""
+
+    MODULE_NAME = 'urllib3_intercept'
+
+
 class UrllibInterceptor(Interceptor):
     """Interceptor for urllib2 and urllib.request."""
 
