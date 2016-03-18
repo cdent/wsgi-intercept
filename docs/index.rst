@@ -15,6 +15,7 @@ Examples
    http_client
    httplib2
    requests
+   urllib3
    urllib
 
 

@@ -1,11 +1,9 @@
 """Intercept HTTP connections that use
-`requests <http://docs.python-requests.org/en/latest/>`_.
+`urllib3 <https://urllib3.readthedocs.org/>`_.
 """
 
-from requests.packages.urllib3.connectionpool import (HTTPConnectionPool,
-        HTTPSConnectionPool)
-from requests.packages.urllib3.connection import (HTTPConnection,
-        HTTPSConnection)
+from urllib3.connectionpool import HTTPConnectionPool, HTTPSConnectionPool
+from urllib3.connection import HTTPConnection, HTTPSConnection
 from ._urllib3 import make_urllib3_override
 
 
