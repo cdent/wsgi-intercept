@@ -38,7 +38,7 @@ META = {
             'pytest>=2.4',
             'httplib2',
             'requests>=2.0.1',
-            'urllib3',
+            'urllib3>=1.11.0',
         ],
     },
 }
