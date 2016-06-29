@@ -50,7 +50,8 @@ def test_more_interesting():
         resp, content = http.request(
             'http://some_hopefully_nonexistant_domain' + expected_uri,
             'GET',
-            headers={'Accept': 'application/json'})
+            headers={'Accept': 'application/json',
+                     'Cookie': 'foo=bar'})
         internal_env = app.get_internals()
 
         expected_path_info = unquote(expected_uri.split('?')[0])
@@ -58,6 +59,8 @@ def test_more_interesting():
         assert internal_env['RAW_URI'] == expected_uri
         assert internal_env['QUERY_STRING'] == 'bar=baz%20zoom'
         assert internal_env['HTTP_ACCEPT'] == 'application/json'
+        assert internal_env['HTTP_COOKIE'] == 'foo=bar'
+        assert type(internal_env['HTTP_COOKIE']) == type('')
 
         # Do the rather painful wsgi encoding dance.
         if sys.version_info[0] > 2:

@@ -220,7 +220,11 @@ def make_environ(inp, host, port, script_name):
 
         k, v = line.strip().split(b':', 1)
         v = v.lstrip()
-        v = v.decode('ISO-8859-1')
+        # Make header value a "native" string. PEP 3333 requires that
+        # string-like things in headers be of type `str`. Much of the
+        # time this isn't a problem but the SimpleCookie library does
+        # type checking against `type("")`.
+        v = str(v.decode('ISO-8859-1'))
 
         #
         # take care of special headers, and for the rest, put them
