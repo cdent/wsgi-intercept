@@ -19,16 +19,13 @@ except ImportError:
             HTTPSConnection as OriginalHTTPSConnection
     )
 
-HTTPInterceptorMixin = WSGI_HTTPConnection
-HTTPSInterceptorMixin = WSGI_HTTPSConnection
 
-
-class HTTP_WSGIInterceptor(HTTPInterceptorMixin, http_lib.HTTPConnection):
+class HTTP_WSGIInterceptor(WSGI_HTTPConnection, http_lib.HTTPConnection):
     pass
 
 
-class HTTPS_WSGIInterceptor(HTTPSInterceptorMixin, http_lib.HTTPSConnection,
-        HTTP_WSGIInterceptor):
+class HTTPS_WSGIInterceptor(WSGI_HTTPSConnection, http_lib.HTTPSConnection,
+                            HTTP_WSGIInterceptor):
 
     def __init__(self, host, **kwargs):
         self.host = host

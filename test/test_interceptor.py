@@ -11,7 +11,11 @@ import py.test
 import requests
 import urllib3
 from httplib2 import Http, ServerNotFoundError
-from six.moves import http_client
+# don't use six as the monkey patching gets confused
+try:
+    import http.client as http_client
+except ImportError:
+    import httplib as http_client
 from six.moves.urllib.request import urlopen
 from six.moves.urllib.error import URLError
 
