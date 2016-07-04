@@ -26,7 +26,7 @@ context manager over web requests that use the library associated with
 the subclass. For example::
 
     import httplib2
-    from wsgi_intercept.intercept import Httplib2Interceptor
+    from wsgi_intercept.interceptor import Httplib2Interceptor
     from mywsgiapp import app
 
     def load_app():
