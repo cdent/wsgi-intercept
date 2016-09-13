@@ -120,7 +120,7 @@ Additional documentation is available on `Read The Docs`_.
 """
 from __future__ import print_function
 
-__version__ = '1.3.1'
+__version__ = '1.3.2'
 
 
 import sys
