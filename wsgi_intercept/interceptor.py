@@ -66,8 +66,12 @@ class Interceptor(object):
                                     None, None))
 
     def _init_from_url(self, url):
+        port = None
         parsed_url = urlparse.urlsplit(url)
-        host, port = parsed_url.netloc.split(':')
+        if ':' in parsed_url.netloc:
+            host, port = parsed_url.netloc.split(':')
+        else:
+            host = parsed_url.netloc
         if not port:
             if parsed_url.scheme == 'https':
                 port = 443
