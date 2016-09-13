@@ -45,6 +45,19 @@ def test_interceptor_instance():
     assert interceptor.url == 'http://%s:%s/foobar' % (hostname, port)
 
 
+def test_intercept_by_url_no_port():
+    # Test for https://github.com/cdent/wsgi-intercept/issues/41
+    hostname = str(uuid4())
+    url = 'http://%s/foobar' % hostname
+    interceptor = Httplib2Interceptor(app=app, url=url)
+    assert isinstance(interceptor, Interceptor)
+    assert interceptor.app == app
+    assert interceptor.host == hostname
+    assert interceptor.port == 80
+    assert interceptor.script_name == '/foobar'
+    assert interceptor.url == url
+
+
 # http_lib
 
 def test_httpclient_interceptor_host():
