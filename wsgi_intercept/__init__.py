@@ -123,25 +123,25 @@ from __future__ import print_function
 
 import sys
 import traceback
+from io import BytesIO
+
+# Don't use six here because it is unquote_to_bytes that we want in
+# Python 3.
+try:
+    from urllib.parse import unquote_to_bytes as url_unquote
+except ImportError:
+    from urllib import unquote as url_unquote
+
+import six
+from six.moves.http_client import HTTPConnection, HTTPSConnection
 
 
 __version__ = '1.3.2'
 
 
-try:
-    from http.client import HTTPConnection, HTTPSConnection
-except ImportError:
-    from httplib import HTTPConnection, HTTPSConnection
-
-try:
-    from io import BytesIO
-except ImportError:
-    from StringIO import StringIO as BytesIO
-
-try:
-    from urllib.parse import unquote_to_bytes as url_unquote
-except ImportError:
-    from urllib import unquote as url_unquote
+# Set this to True to cause response headers from the intercepted
+# app to be confirmed as bytestrings, behaving as some wsgi servers.
+STRICT_RESPONSE_HEADERS = False
 
 
 debuglevel = 0
@@ -210,7 +210,7 @@ def make_environ(inp, host, port, script_name):
     environ = {}
 
     method_line = inp.readline()
-    if sys.version_info[0] > 2:
+    if six.PY3:
         method_line = method_line.decode('ISO-8859-1')
 
     content_type = None
@@ -290,7 +290,7 @@ def make_environ(inp, host, port, script_name):
     # do to be like a server. Later various libraries will be forced
     # to decode and then reencode to get the UTF-8 that everyone
     # wants.
-    if sys.version_info[0] > 2:
+    if six.PY3:
         path_info = path_info.decode('latin-1')
 
     environ.update({
@@ -411,7 +411,8 @@ class wsgi_fake_socket:
 
         def start_response(status, headers, exc_info=None):
             # construct the HTTP request.
-            self.output.write(b"HTTP/1.0 " + status.encode('utf-8') + b"\n")
+            self.output.write(
+                b"HTTP/1.0 " + status.encode('ISO-8859-1') + b"\n")
             # Keep the reference of the headers list to write them only
             # when the whole application have been processed
             self.headers = headers
@@ -436,12 +437,18 @@ class wsgi_fake_socket:
         # send the headers
 
         for k, v in self.headers:
+            original_header = k
             try:
-                k = k.encode('utf-8')
+                k = k.encode('ISO-8859-1')
             except AttributeError:
                 pass
             try:
-                v = v.encode('utf-8')
+                if STRICT_RESPONSE_HEADERS:
+                    if not isinstance(v, six.binary_type):
+                        raise TypeError(
+                            'Header %s has value %s which is not a bytestring.'
+                            % (original_header, v))
+                v = v.encode('ISO-8859-1')
             except AttributeError:
                 pass
             self.output.write(k + b': ' + v + b"\n")

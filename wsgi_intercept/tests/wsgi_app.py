@@ -13,20 +13,20 @@ except ImportError:
 def simple_app(environ, start_response):
     """Simplest possible application object"""
     status = '200 OK'
-    response_headers = [('Content-type', 'text/plain')]
+    response_headers = [('Content-type', b'text/plain')]
     start_response(status, response_headers)
     return [b'WSGI intercept successful!\n']
 
 
 def more_interesting_app(environ, start_response):
-    start_response('200 OK', [('Content-type', 'text/plain')])
+    start_response('200 OK', [('Content-type', b'text/plain')])
     return [pformat(environ).encode('utf-8')]
 
 
 def post_status_headers_app(environ, start_response):
     headers = []
     start_response('200 OK', headers)
-    headers.append(('Content-type', 'text/plain'))
+    headers.append(('Content-type', b'text/plain'))
     return [b'WSGI intercept successful!\n']
 
 
