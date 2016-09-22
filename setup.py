@@ -40,6 +40,9 @@ META = {
             'requests>=2.0.1',
             'urllib3>=1.11.0',
         ],
+        'docs': [
+            'sphinx',
+        ],
     },
 }
 
