@@ -1,8 +1,8 @@
 import os
 import py.test
 from wsgi_intercept import urllib_intercept, WSGIAppError
-from test import wsgi_app
-from test.install import installer_class, skipnetwork
+from . import wsgi_app
+from .install import installer_class, skipnetwork
 try:
     import urllib.request as url_lib
 except ImportError:

@@ -1,3 +1,2 @@
 include LICENSE Makefile
-recursive-include test *
 recursive-include docs *

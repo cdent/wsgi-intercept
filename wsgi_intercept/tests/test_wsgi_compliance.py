@@ -5,8 +5,8 @@ try:
 except ImportError:
     from urllib import unquote
 from wsgi_intercept import httplib2_intercept
-from test import wsgi_app
-from test.install import installer_class
+from . import wsgi_app
+from .install import installer_class
 import httplib2
 
 HOST = 'some_hopefully_nonexistant_domain'
