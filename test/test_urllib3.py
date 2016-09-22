@@ -1,6 +1,5 @@
 import os
 import py.test
-import socket
 from wsgi_intercept import urllib3_intercept, WSGIAppError
 from test import wsgi_app
 from test.install import installer_class, skipnetwork
@@ -14,7 +13,8 @@ http = urllib3.PoolManager()
 
 def test_http():
     with InstalledApp(wsgi_app.simple_app, host=HOST, port=80) as app:
-        resp = http.request('GET', 'http://some_hopefully_nonexistant_domain:80/')
+        resp = http.request(
+            'GET', 'http://some_hopefully_nonexistant_domain:80/')
         assert resp.data == b'WSGI intercept successful!\n'
         assert app.success()
 
@@ -28,7 +28,8 @@ def test_http_default_port():
 
 def test_http_other_port():
     with InstalledApp(wsgi_app.simple_app, host=HOST, port=8080) as app:
-        resp = http.request('GET', 'http://some_hopefully_nonexistant_domain:8080/')
+        resp = http.request(
+            'GET', 'http://some_hopefully_nonexistant_domain:8080/')
         assert resp.data == b'WSGI intercept successful!\n'
         assert app.success()
         environ = app.get_internals()
@@ -39,7 +40,8 @@ def test_bogus_domain():
     with InstalledApp(wsgi_app.simple_app, host=HOST, port=80):
         py.test.raises(
             urllib3.exceptions.ProtocolError,
-            'http.request("GET", "http://_nonexistant_domain_", retries=False)')
+            'http.request("GET", "http://_nonexistant_domain_", '
+            'retries=False)')
 
 
 def test_proxy_handling():
@@ -56,14 +58,16 @@ def test_proxy_handling():
 
 def test_https():
     with InstalledApp(wsgi_app.simple_app, host=HOST, port=443) as app:
-        resp = http.request('GET', 'https://some_hopefully_nonexistant_domain:443/')
+        resp = http.request(
+            'GET', 'https://some_hopefully_nonexistant_domain:443/')
         assert resp.data == b'WSGI intercept successful!\n'
         assert app.success()
 
 
 def test_https_default_port():
     with InstalledApp(wsgi_app.simple_app, host=HOST, port=443) as app:
-        resp = http.request('GET', 'https://some_hopefully_nonexistant_domain/')
+        resp = http.request(
+            'GET', 'https://some_hopefully_nonexistant_domain/')
         assert resp.data == b'WSGI intercept successful!\n'
         assert app.success()
         environ = app.get_internals()

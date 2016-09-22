@@ -60,7 +60,13 @@ def test_more_interesting():
         assert internal_env['QUERY_STRING'] == 'bar=baz%20zoom'
         assert internal_env['HTTP_ACCEPT'] == 'application/json'
         assert internal_env['HTTP_COOKIE'] == 'foo=bar'
-        assert type(internal_env['HTTP_COOKIE']) == type('')
+        # In this test we are ensuring the value, in the environ, of
+        # a request header has a value which is a str, as native to
+        # that version of Python. That means always a str, despite
+        # the fact that a str in Python 2 and 3 are different
+        # things! PEP 3333 requires this. isinstance is not used to
+        # avoid confusion over class hierarchies.
+        assert type(internal_env['HTTP_COOKIE']) == type('') # noqa E721
 
         # Do the rather painful wsgi encoding dance.
         if sys.version_info[0] > 2:

@@ -26,6 +26,7 @@ from .wsgi_app import simple_app
 
 httppool = urllib3.PoolManager()
 
+
 def app():
     return simple_app
 

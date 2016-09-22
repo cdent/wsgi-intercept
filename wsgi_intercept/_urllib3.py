@@ -19,7 +19,6 @@ def make_urllib3_override(HTTPConnectionPool, HTTPSConnectionPool,
             WSGI_HTTPConnection.__init__(self, *args, **kwargs)
             HTTPConnection.__init__(self, *args, **kwargs)
 
-
     class HTTPS_WSGIInterceptor(WSGI_HTTPSConnection, HTTPSConnection):
         is_verified = True
 
@@ -29,14 +28,12 @@ def make_urllib3_override(HTTPConnectionPool, HTTPSConnectionPool,
             WSGI_HTTPSConnection.__init__(self, *args, **kwargs)
             HTTPSConnection.__init__(self, *args, **kwargs)
 
-
     def install():
         if 'http_proxy' in os.environ or 'https_proxy' in os.environ:
             raise RuntimeError(
                 'http_proxy or https_proxy set in environment, please unset')
         HTTPConnectionPool.ConnectionCls = HTTP_WSGIInterceptor
         HTTPSConnectionPool.ConnectionCls = HTTPS_WSGIInterceptor
-
 
     def uninstall():
         HTTPConnectionPool.ConnectionCls = HTTPConnection
