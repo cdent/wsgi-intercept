@@ -27,6 +27,6 @@ Example:
     url = 'http://{0}:{1}/'.format(host, port)
     urllib3_intercept.install()
     add_wsgi_intercept(host, port, make_app)
-    resp = pool.requests('GET', url)
+    resp = pool.request('GET', url)
     assert resp.data == b'Whee'
     urllib3_intercept.uninstall()

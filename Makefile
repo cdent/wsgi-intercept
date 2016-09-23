@@ -24,7 +24,7 @@ reclean:
 	cd docs && make clean
 
 test:
-	py.test --tb=short -x test
+	tox --skip-missing-interpreters
 
 doctest:
 	cd docs && make doctest
@@ -39,6 +39,6 @@ pypi:
 	python setup.py sdist upload
 
 docs:
-	cd docs && $(MAKE) html
+	tox -edocs
 
 release: clean test tagv reclean pypi

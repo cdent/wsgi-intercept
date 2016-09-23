@@ -1,4 +1,3 @@
-
 """Installs a WSGI application in place of a real host for testing.
 
 Introduction
@@ -89,19 +88,21 @@ History
 
 Pursuant to Ian Bicking's `"best Web testing framework"`_ post, Titus
 Brown put together an `in-process HTTP-to-WSGI interception mechanism`_
-for his own Web testing system, twill_. Because the mechanism is pretty
+for his own Web testing system, twill. Because the mechanism is pretty
 generic -- it works at the httplib level -- Titus decided to try adding
 it into all of the *other* Python Web testing frameworks.
 
 The Python 2 version of wsgi-intercept was the result. Kumar McMillan
 later took over maintenance.
 
-The current version works with Python 2.7, 3.3, 3.4 and 3.5 and was assembled
-by `Chris Dent`_. Testing and documentation improvements from `Sasha Hart`_.
+The current version is tested with Python 2.7, 3.3, 3.4, 3.5 and pypy
+and was assembled by `Chris Dent`_. Testing and documentation improvements
+from `Sasha Hart`_.
 
-.. _twill: http://www.idyll.org/~t/www-tools/twill.html
-.. _"best Web testing framework": http://blog.ianbicking.org/best-of-the-web-app-test-frameworks.html
-.. _in-process HTTP-to-WSGI interception mechanism: http://www.advogato.org/person/titus/diary.html?start=119
+.. _"best Web testing framework":
+     http://blog.ianbicking.org/best-of-the-web-app-test-frameworks.html
+.. _in-process HTTP-to-WSGI interception mechanism:
+     http://www.advogato.org/person/titus/diary.html?start=119
 .. _WSGI application: http://www.python.org/peps/pep-3333.html
 .. _Chris Dent: https://github.com/cdent
 .. _Sasha Hart: https://github.com/sashahart
@@ -120,10 +121,13 @@ Additional documentation is available on `Read The Docs`_.
 """
 from __future__ import print_function
 
+import sys
+import traceback
+
+
 __version__ = '1.3.2'
 
 
-import sys
 try:
     from http.client import HTTPConnection, HTTPSConnection
 except ImportError:
@@ -139,7 +143,6 @@ try:
 except ImportError:
     from urllib import unquote as url_unquote
 
-import traceback
 
 debuglevel = 0
 # 1 basic

@@ -1,7 +1,7 @@
 import py.test
 from wsgi_intercept import http_client_intercept, WSGIAppError
-from test import wsgi_app
-from test.install import installer_class, skipnetwork
+from . import wsgi_app
+from .install import installer_class, skipnetwork
 try:
     import http.client as http_lib
 except ImportError:

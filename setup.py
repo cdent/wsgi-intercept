@@ -23,7 +23,9 @@ META = {
     'version': wsgi_intercept.__version__,
     'author': 'Titus Brown, Kumar McMillan, Chris Dent, Sasha Hart',
     'author_email': 'cdent@peermore.com',
-    'description': 'wsgi_intercept installs a WSGI application in place of a real URI for testing.',
+    'description':
+        'wsgi_intercept installs a WSGI application in place of a '
+        'real URI for testing.',
     # What will the name be?
     'url': 'http://pypi.python.org/pypi/wsgi_intercept',
     'long_description': wsgi_intercept.__doc__,
@@ -39,6 +41,9 @@ META = {
             'httplib2',
             'requests>=2.0.1',
             'urllib3>=1.11.0',
+        ],
+        'docs': [
+            'sphinx',
         ],
     },
 }

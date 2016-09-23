@@ -1,7 +1,7 @@
 import py.test
 from wsgi_intercept import httplib2_intercept, WSGIAppError
-from test import wsgi_app
-from test.install import installer_class
+from . import wsgi_app
+from .install import installer_class
 import httplib2
 from socket import gaierror
 

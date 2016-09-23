@@ -23,6 +23,7 @@ def teardown_module(module):
 
 
 def test_simple_request():
+    global host
     http = Http()
     response, content = http.request('http://%s/' % host)
     assert response.status == 200
@@ -30,6 +31,7 @@ def test_simple_request():
 
 
 def test_another_request():
+    global host
     http = Http()
     response, content = http.request('http://%s/foobar' % host)
     assert response.status == 200
