@@ -1,6 +1,8 @@
-import wsgi_intercept
 
 from setuptools import setup, find_packages
+
+VERSION = '1.4.0'
+README = open('README.rst').read()
 
 CLASSIFIERS = """
 Environment :: Web Environment
@@ -20,7 +22,7 @@ Topic :: Software Development :: Testing
 
 META = {
     'name': 'wsgi_intercept',
-    'version': wsgi_intercept.__version__,
+    'version': VERSION,
     'author': 'Titus Brown, Kumar McMillan, Chris Dent, Sasha Hart',
     'author_email': 'cdent@peermore.com',
     'description':
@@ -28,7 +30,7 @@ META = {
         'real URI for testing.',
     # What will the name be?
     'url': 'http://pypi.python.org/pypi/wsgi_intercept',
-    'long_description': wsgi_intercept.__doc__,
+    'long_description': README,
     'license': 'MIT License',
     'classifiers': CLASSIFIERS,
     'packages': find_packages(),

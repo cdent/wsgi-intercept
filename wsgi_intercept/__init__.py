@@ -3,12 +3,26 @@
 Introduction
 ============
 
-Testing a WSGI application normally involves starting a server at a
+Testing a WSGI application sometimes involves starting a server at a
 local host and port, then pointing your test code to that address.
 Instead, this library lets you intercept calls to any specific host/port
 combination and redirect them into a `WSGI application`_ importable by
 your test program. Thus, you can avoid spawning multiple processes or
 threads to test your Web app.
+
+Supported Libaries
+==================
+
+``wsgi_intercept`` works with a variety of HTTP clients in Python 2.7,
+3.3 and beyond, and in pypy.
+
+* urllib2
+* urllib.request
+* httplib
+* http.client
+* httplib2
+* requests
+* urllib3
 
 How Does It Work?
 =================
@@ -64,17 +78,16 @@ Install
 Packages Intercepted
 ====================
 
-Unfortunately each of the Web testing frameworks uses its own specific
+Unfortunately each of the HTTP client libraries use their own specific
 mechanism for making HTTP call-outs, so individual implementations are
-needed. At this time there are implementations for ``httplib2`` and
-``requests`` in both Python 2 and 3, ``urllib2`` and ``httplib``
-in Python 2 and ``urllib.request`` and ``http.client`` in Python 3.
+needed. At this time there are implementations for ``httplib2``,
+``urllib3`` and ``requests`` in both Python 2 and 3, ``urllib2`` and
+``httplib`` in Python 2 and ``urllib.request`` and ``http.client``
+in Python 3.
 
 If you are using Python 2 and need support for a different HTTP
 client, require a version of ``wsgi_intercept<0.6``. Earlier versions
 include support for ``webtest``, ``webunit`` and ``zope.testbrowser``.
-It is quite likely that support for these versions will be relatively
-easy to add back in to the new version.
 
 The best way to figure out how to use interception is to inspect
 `the tests`_. More comprehensive documentation available upon
@@ -117,7 +130,6 @@ Additional documentation is available on `Read The Docs`_.
 
 .. _GitHub: http://github.com/cdent/wsgi-intercept
 .. _Read The Docs: http://wsgi-intercept.readthedocs.org/en/latest/
-
 """
 from __future__ import print_function
 
