@@ -10,6 +10,7 @@ not the other way round. Let's write some tests to fix that.
 
 import py.test
 import requests
+import six
 
 import wsgi_intercept
 from wsgi_intercept.interceptor import RequestsInterceptor
@@ -40,7 +41,7 @@ def test_header_app():
     Many libraries normalize headers to strings so we're not
     going to get exact matches.
     """
-    header_value = b'alpha'
+    header_value = 'alpha'
     header_value_str = 'alpha'
 
     def header_app():
@@ -54,16 +55,22 @@ def test_header_app():
 
 def test_encoding_violation():
     """If the header is unicode we expect boom."""
-    header_value = u'alpha'
+    header_key = 'request-id'
+    if six.PY2:
+        header_value = u'alpha'
+    else:
+        header_value = b'alpha'
+    # we expect our http library to give us a str
+    returned_header = 'alpha'
 
     def header_app():
-        return app({'request-id': header_value})
+        return app({header_key: header_value})
 
     # save original
     strict_response_headers = wsgi_intercept.STRICT_RESPONSE_HEADERS
 
     # With STRICT_RESPONSE_HEADERS True, response headers must be
-    # bytestrings.
+    # native str.
     with RequestsInterceptor(header_app) as url:
         wsgi_intercept.STRICT_RESPONSE_HEADERS = True
 
@@ -71,14 +78,15 @@ def test_encoding_violation():
             response = requests.get(url)
 
         assert (str(error.value) ==
-            'Header request-id has value alpha which is not a bytestring.')
+            "Header has a key '%s' or value '%s' "
+            "which is not a native str." % (header_key, header_value))
 
         # When False, other types of strings are okay.
         wsgi_intercept.STRICT_RESPONSE_HEADERS = False
 
         response = requests.get(url)
 
-        assert response.headers['request-id'] == header_value
+        assert response.headers['request-id'] == returned_header
 
     # reset back to saved original
     wsgi_intercept.STRICT_RESPONSE_HEADERS = \

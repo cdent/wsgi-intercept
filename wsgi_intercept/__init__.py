@@ -59,14 +59,21 @@ be used to specify which URLs should be redirected into what applications.
 These methods are still available, but the ``Interceptor`` classes are likely
 easier to use for most use cases.
 
-Note especially that ``app_create_fn`` is a *function object* returning a WSGI
-application; ``script_name`` becomes ``SCRIPT_NAME`` in the WSGI app's
-environment, if set.
+.. note:: ``app_create_fn`` is a *function object* returning a WSGI application;
+          ``script_name`` becomes ``SCRIPT_NAME`` in the WSGI app's environment,
+          if set.
 
-Note also that if ``http_proxy`` or ``https_proxy`` is set in the environment
-this can cause difficulties with some of the intercepted libraries. If
-requests or urllib is being used, these will raise an exception if one of
-those variables is set.
+.. note:: If ``http_proxy`` or ``https_proxy`` is set in the environment
+          this can cause difficulties with some of the intercepted libraries.
+          If requests or urllib is being used, these will raise an exception
+          if one of those variables is set.
+
+.. note:: If ``wsgi_intercept.STRICT_RESPONSE_HEADERS`` is set to ``True`` then
+          response headers sent by an application will be checked to make sure
+          they are of the type ``str`` native to the version of Python, as
+          required by pep 3333. The default is ``False`` (to preserve backwards
+          compatibility)
+
 
 Install
 =======
@@ -449,17 +456,16 @@ class wsgi_fake_socket:
         # send the headers
 
         for k, v in self.headers:
-            original_header = k
+            if STRICT_RESPONSE_HEADERS:
+                if not (isinstance(k, str) and isinstance(v, str)):
+                    raise TypeError(
+                        "Header has a key '%s' or value '%s' "
+                        "which is not a native str." % (k, v))
             try:
                 k = k.encode('ISO-8859-1')
             except AttributeError:
                 pass
             try:
-                if STRICT_RESPONSE_HEADERS:
-                    if not isinstance(v, six.binary_type):
-                        raise TypeError(
-                            'Header %s has value %s which is not a bytestring.'
-                            % (original_header, v))
                 v = v.encode('ISO-8859-1')
             except AttributeError:
                 pass
