@@ -155,9 +155,6 @@ import six
 from six.moves.http_client import HTTPConnection, HTTPSConnection
 
 
-__version__ = '1.3.2'
-
-
 # Set this to True to cause response headers from the intercepted
 # app to be confirmed as bytestrings, behaving as some wsgi servers.
 STRICT_RESPONSE_HEADERS = False
