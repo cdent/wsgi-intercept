@@ -3,12 +3,26 @@
 Introduction
 ============
 
-Testing a WSGI application normally involves starting a server at a
+Testing a WSGI application sometimes involves starting a server at a
 local host and port, then pointing your test code to that address.
 Instead, this library lets you intercept calls to any specific host/port
 combination and redirect them into a `WSGI application`_ importable by
 your test program. Thus, you can avoid spawning multiple processes or
 threads to test your Web app.
+
+Supported Libaries
+==================
+
+``wsgi_intercept`` works with a variety of HTTP clients in Python 2.7,
+3.3 and beyond, and in pypy.
+
+* urllib2
+* urllib.request
+* httplib
+* http.client
+* httplib2
+* requests
+* urllib3
 
 How Does It Work?
 =================
@@ -45,14 +59,21 @@ be used to specify which URLs should be redirected into what applications.
 These methods are still available, but the ``Interceptor`` classes are likely
 easier to use for most use cases.
 
-Note especially that ``app_create_fn`` is a *function object* returning a WSGI
-application; ``script_name`` becomes ``SCRIPT_NAME`` in the WSGI app's
-environment, if set.
+.. note:: ``app_create_fn`` is a *function object* returning a WSGI
+          application; ``script_name`` becomes ``SCRIPT_NAME`` in the WSGI
+          app's environment, if set.
 
-Note also that if ``http_proxy`` or ``https_proxy`` is set in the environment
-this can cause difficulties with some of the intercepted libraries. If
-requests or urllib is being used, these will raise an exception if one of
-those variables is set.
+.. note:: If ``http_proxy`` or ``https_proxy`` is set in the environment
+          this can cause difficulties with some of the intercepted libraries.
+          If requests or urllib is being used, these will raise an exception
+          if one of those variables is set.
+
+.. note:: If ``wsgi_intercept.STRICT_RESPONSE_HEADERS`` is set to ``True``
+          then response headers sent by an application will be checked to
+          make sure they are of the type ``str`` native to the version of
+          Python, as required by pep 3333. The default is ``False`` (to
+          preserve backwards compatibility)
+
 
 Install
 =======
@@ -64,17 +85,16 @@ Install
 Packages Intercepted
 ====================
 
-Unfortunately each of the Web testing frameworks uses its own specific
+Unfortunately each of the HTTP client libraries use their own specific
 mechanism for making HTTP call-outs, so individual implementations are
-needed. At this time there are implementations for ``httplib2`` and
-``requests`` in both Python 2 and 3, ``urllib2`` and ``httplib``
-in Python 2 and ``urllib.request`` and ``http.client`` in Python 3.
+needed. At this time there are implementations for ``httplib2``,
+``urllib3`` and ``requests`` in both Python 2 and 3, ``urllib2`` and
+``httplib`` in Python 2 and ``urllib.request`` and ``http.client``
+in Python 3.
 
 If you are using Python 2 and need support for a different HTTP
 client, require a version of ``wsgi_intercept<0.6``. Earlier versions
 include support for ``webtest``, ``webunit`` and ``zope.testbrowser``.
-It is quite likely that support for these versions will be relatively
-easy to add back in to the new version.
 
 The best way to figure out how to use interception is to inspect
 `the tests`_. More comprehensive documentation available upon
@@ -117,31 +137,27 @@ Additional documentation is available on `Read The Docs`_.
 
 .. _GitHub: http://github.com/cdent/wsgi-intercept
 .. _Read The Docs: http://wsgi-intercept.readthedocs.org/en/latest/
-
 """
 from __future__ import print_function
 
 import sys
 import traceback
+from io import BytesIO
 
-
-__version__ = '1.3.2'
-
-
-try:
-    from http.client import HTTPConnection, HTTPSConnection
-except ImportError:
-    from httplib import HTTPConnection, HTTPSConnection
-
-try:
-    from io import BytesIO
-except ImportError:
-    from StringIO import StringIO as BytesIO
-
+# Don't use six here because it is unquote_to_bytes that we want in
+# Python 3.
 try:
     from urllib.parse import unquote_to_bytes as url_unquote
 except ImportError:
     from urllib import unquote as url_unquote
+
+import six
+from six.moves.http_client import HTTPConnection, HTTPSConnection
+
+
+# Set this to True to cause response headers from the intercepted
+# app to be confirmed as bytestrings, behaving as some wsgi servers.
+STRICT_RESPONSE_HEADERS = False
 
 
 debuglevel = 0
@@ -210,7 +226,7 @@ def make_environ(inp, host, port, script_name):
     environ = {}
 
     method_line = inp.readline()
-    if sys.version_info[0] > 2:
+    if six.PY3:
         method_line = method_line.decode('ISO-8859-1')
 
     content_type = None
@@ -290,7 +306,7 @@ def make_environ(inp, host, port, script_name):
     # do to be like a server. Later various libraries will be forced
     # to decode and then reencode to get the UTF-8 that everyone
     # wants.
-    if sys.version_info[0] > 2:
+    if six.PY3:
         path_info = path_info.decode('latin-1')
 
     environ.update({
@@ -411,7 +427,8 @@ class wsgi_fake_socket:
 
         def start_response(status, headers, exc_info=None):
             # construct the HTTP request.
-            self.output.write(b"HTTP/1.0 " + status.encode('utf-8') + b"\n")
+            self.output.write(
+                b"HTTP/1.0 " + status.encode('ISO-8859-1') + b"\n")
             # Keep the reference of the headers list to write them only
             # when the whole application have been processed
             self.headers = headers
@@ -436,12 +453,17 @@ class wsgi_fake_socket:
         # send the headers
 
         for k, v in self.headers:
+            if STRICT_RESPONSE_HEADERS:
+                if not (isinstance(k, str) and isinstance(v, str)):
+                    raise TypeError(
+                        "Header has a key '%s' or value '%s' "
+                        "which is not a native str." % (k, v))
             try:
-                k = k.encode('utf-8')
+                k = k.encode('ISO-8859-1')
             except AttributeError:
                 pass
             try:
-                v = v.encode('utf-8')
+                v = v.encode('ISO-8859-1')
             except AttributeError:
                 pass
             self.output.write(k + b': ' + v + b"\n")
