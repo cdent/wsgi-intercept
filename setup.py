@@ -1,8 +1,7 @@
 
 from setuptools import setup, find_packages
 
-VERSION = '1.4.0'
-README = open('README.rst').read()
+VERSION = '1.4.1'
 
 CLASSIFIERS = """
 Environment :: Web Environment
@@ -30,7 +29,7 @@ META = {
         'real URI for testing.',
     # What will the name be?
     'url': 'http://pypi.python.org/pypi/wsgi_intercept',
-    'long_description': README,
+    'long_description': open('README').read(),
     'license': 'MIT License',
     'classifiers': CLASSIFIERS,
     'packages': find_packages(),
