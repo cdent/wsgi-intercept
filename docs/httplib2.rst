@@ -3,6 +3,11 @@ httplib2_intercept
 
 .. automodule:: wsgi_intercept.httplib2_intercept
 
+.. note:: No effort is made to pass SSL certificate or version
+          information to the the underlying ``HTTPSConnection``. The
+          assumption is that wsgi-intercept is testing the behavior
+          of the application, not the connection.
+
 Example:
 
 .. testcode:: 
