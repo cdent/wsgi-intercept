@@ -32,3 +32,8 @@ def post_status_headers_app(environ, start_response):
 
 def raises_app(environ, start_response):
     raise TypeError("bah")
+
+
+def empty_string_app(environ, start_response):
+    start_response('200 OK', [('Content-type', 'text/plain')])
+    return [b'', b'second']

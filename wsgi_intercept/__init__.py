@@ -487,7 +487,7 @@ class wsgi_fake_socket:
                 for data in self.write_results:
                     self.output.write(data)
 
-            if generator_data:
+            if generator_data is not None:
                 try:
                     self.output.write(generator_data)
                 except TypeError as exc:

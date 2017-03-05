@@ -28,7 +28,7 @@ class HeaderApp(object):
         for header in self.headers:
             headers.append((header, self.headers[header]))
         start_response('200 OK', headers)
-        return ['']
+        return [b'']
 
 
 def app(headers):

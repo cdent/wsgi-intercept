@@ -105,3 +105,12 @@ def test_post_status_headers():
             'http://some_hopefully_nonexistant_domain/', 'GET')
         assert app.success()
         assert resp.get('content-type') == 'text/plain'
+
+
+def test_empty_iterator():
+    with InstalledApp(wsgi_app.empty_string_app, host=HOST) as app:
+        http = httplib2.Http()
+        resp, content = http.request(
+            'http://some_hopefully_nonexistant_domain/', 'GET')
+        assert app.success()
+        assert content == b'second'
