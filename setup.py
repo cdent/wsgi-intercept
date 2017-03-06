@@ -1,7 +1,7 @@
 
 from setuptools import setup, find_packages
 
-VERSION = '1.4.1'
+VERSION = '1.5.0'
 
 CLASSIFIERS = """
 Environment :: Web Environment
@@ -14,6 +14,7 @@ Programming Language :: Python :: 3
 Programming Language :: Python :: 3.3
 Programming Language :: Python :: 3.4
 Programming Language :: Python :: 3.5
+Programming Language :: Python :: 3.6
 Topic :: Internet :: WWW/HTTP :: WSGI
 Topic :: Software Development :: Testing
 """.strip().splitlines()
