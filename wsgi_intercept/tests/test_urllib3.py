@@ -74,6 +74,14 @@ def test_https_default_port():
         assert environ['wsgi.url_scheme'] == 'https'
 
 
+def test_socket_options():
+    http = urllib3.PoolManager(socket_options=[])
+    with InstalledApp(wsgi_app.simple_app, host=HOST, port=80):
+        http.request('GET', 'http://some_hopefully_nonexistant_domain/')
+    with InstalledApp(wsgi_app.simple_app, host=HOST, port=443):
+        http.request('GET', 'https://some_hopefully_nonexistant_domain/')
+
+
 def test_app_error():
     with InstalledApp(wsgi_app.raises_app, host=HOST, port=80):
         with py.test.raises(WSGIAppError):
