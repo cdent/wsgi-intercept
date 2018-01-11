@@ -313,7 +313,7 @@ def make_environ(inp, host, port, script_name):
         "wsgi.version": (1, 0),
         "wsgi.url_scheme": "http",
         "wsgi.input": inp,  # to read for POSTs
-        "wsgi.errors": BytesIO(),
+        "wsgi.errors": sys.stderr,
         "wsgi.multithread": 0,
         "wsgi.multiprocess": 0,
         "wsgi.run_once": 0,
