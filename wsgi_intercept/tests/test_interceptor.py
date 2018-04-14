@@ -267,6 +267,7 @@ def test_urllib_in_out():
     with py.test.raises(URLError):
         urlopen(url)
 
+
 def test_double_nested_context_interceptor():
     hostname = str(uuid4())
     url1 = 'http://%s:%s/' % (hostname, 9998)
