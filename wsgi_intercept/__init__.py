@@ -201,6 +201,7 @@ def remove_wsgi_intercept(*args):
         key = (args[0], args[1])
         if key in _wsgi_intercept:
             del _wsgi_intercept[key]
+    return len(_wsgi_intercept)
 
 
 #

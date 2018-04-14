@@ -91,7 +91,13 @@ class Interceptor(object):
                                           script_name=self.script_name)
 
     def uninstall_intercept(self):
-        wsgi_intercept.remove_wsgi_intercept(self.host, self.port)
+        remaining = wsgi_intercept.remove_wsgi_intercept(self.host, self.port)
+        # Only remove the module's class overrides if there are no intercepts
+        # left. Otherwise nested context managers cannot work.
+        if not remaining:
+            self.uninstall_module()
+
+    def uninstall_module(self):
         self._module.uninstall()
 
 

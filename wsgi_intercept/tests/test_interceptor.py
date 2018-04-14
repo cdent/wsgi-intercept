@@ -266,3 +266,33 @@ def test_urllib_in_out():
     # outside the context manager the intercept does not work
     with py.test.raises(URLError):
         urlopen(url)
+
+def test_double_nested_context_interceptor():
+    hostname = str(uuid4())
+    url1 = 'http://%s:%s/' % (hostname, 9998)
+    url2 = 'http://%s:%s/' % (hostname, 9999)
+
+    with Urllib3Interceptor(app=app, url=url1):
+        with Urllib3Interceptor(app=app, url=url2):
+
+            response = httppool.request('GET', url1)
+            assert response.status == 200
+            assert 'WSGI intercept successful!' in str(response.data)
+
+            response = httppool.request('GET', url2)
+            assert response.status == 200
+            assert 'WSGI intercept successful!' in str(response.data)
+
+        response = httppool.request('GET', url1)
+        assert response.status == 200
+        assert 'WSGI intercept successful!' in str(response.data)
+
+        # outside the inner context manager url2 does not work
+        with py.test.raises(urllib3.exceptions.HTTPError):
+            httppool.request('GET', url2, retries=False)
+
+    # outside both context managers neither url works
+    with py.test.raises(urllib3.exceptions.HTTPError):
+        httppool.request('GET', url2, retries=False)
+    with py.test.raises(urllib3.exceptions.HTTPError):
+        httppool.request('GET', url1, retries=False)
