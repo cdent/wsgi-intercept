@@ -77,8 +77,8 @@ def test_encoding_violation():
         with py.test.raises(TypeError) as error:
             response = requests.get(url)
 
-        assert (str(error.value) ==
-            "Header has a key '%s' or value '%s' "
+        assert (
+            str(error.value) == "Header has a key '%s' or value '%s' "
             "which is not a native str." % (header_key, header_value))
 
         # When False, other types of strings are okay.
