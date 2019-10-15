@@ -38,10 +38,8 @@ def test_http_other_port():
 
 def test_bogus_domain():
     with InstalledApp(wsgi_app.simple_app, host=HOST, port=80):
-        py.test.raises(
-            urllib3.exceptions.ProtocolError,
-            'http.request("GET", "http://_nonexistant_domain_", '
-            'retries=False)')
+        with py.test.raises(urllib3.exceptions.ProtocolError):
+            http.request("GET", "http://_nonexistant_domain_", retries=False)
 
 
 def test_proxy_handling():
