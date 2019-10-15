@@ -36,7 +36,8 @@ tagv:
 	git push origin master --tags
 
 pypi:
-	python setup.py sdist bdist_wheel upload --sign
+	python3 setup.py sdist bdist_wheel
+	twine upload -s dist/*
 
 docs:
 	tox -edocs
