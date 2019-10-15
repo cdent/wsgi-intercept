@@ -32,8 +32,7 @@ class HTTPS_WSGIInterceptorWithTimeout(HTTPSInterceptorMixin,
         HTTPSConnectionWithTimeout):
     def __init__(self, host, port=None, strict=None, timeout=None,
             proxy_info=None, ca_certs=None, source_address=None,
-            disable_ssl_certificate_validation=False,
-            ssl_version=None):
+            **kwargs):
 
         # ignore proxy_info and ca_certs
         # In Python3 strict is deprecated

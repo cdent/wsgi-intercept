@@ -42,10 +42,9 @@ def test_http_other_port():
 
 def test_bogus_domain():
     with InstalledApp(wsgi_app.simple_app, host=HOST, port=80):
-        py.test.raises(
-            gaierror,
-            'httplib2_intercept.HTTP_WSGIInterceptorWithTimeout('
-            '"_nonexistant_domain_").connect()')
+        with py.test.raises(gaierror):
+            httplib2_intercept.HTTP_WSGIInterceptorWithTimeout(
+                    "_nonexistant_domain_").connect()
 
 
 def test_proxy_handling():
