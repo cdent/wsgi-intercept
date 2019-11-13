@@ -59,6 +59,20 @@ def test_https():
         assert app.success()
 
 
+def test_https_no_ssl_verification_intercepted():
+    with InstalledApp(wsgi_app.simple_app, host=HOST, port=443) as app:
+        resp = requests.get('https://some_hopefully_nonexistant_domain:443/', verify=False)
+        assert resp.content == b'WSGI intercept successful!\n'
+        assert app.success()
+
+
+def test_https_no_ssl_verification_not_intercepted():
+    with InstalledApp(wsgi_app.simple_app, host=HOST, port=443) as app:
+        resp = requests.get('https://self-signed.badssl.com/', verify=False)
+        assert resp.status_code >= 200 and resp.status_code < 300
+        assert not app.success()
+
+
 def test_https_default_port():
     with InstalledApp(wsgi_app.simple_app, host=HOST, port=443) as app:
         resp = requests.get('https://some_hopefully_nonexistant_domain/')

@@ -623,6 +623,13 @@ class WSGI_HTTPSConnection(HTTPSConnection, WSGI_HTTPConnection):
             else:
                 try:
                     import ssl
+                    if hasattr(self, '_context'):
+                        self._context.check_hostname = self.assert_hostname
+                        if isinstance(self.cert_reqs, ssl.VerifyMode):
+                            self._context.verify_mode = self.cert_reqs
+                        else:
+                            self._context.verify_mode = ssl.VerifyMode[self.cert_reqs]
+
                     if not hasattr(self, 'key_file'):
                         self.key_file = None
                     if not hasattr(self, 'cert_file'):
