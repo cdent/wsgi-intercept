@@ -67,6 +67,7 @@ def test_https_no_ssl_verification_intercepted():
         assert app.success()
 
 
+@skipnetwork
 def test_https_no_ssl_verification_not_intercepted():
     with InstalledApp(wsgi_app.simple_app, host=HOST, port=443) as app:
         resp = requests.get('https://self-signed.badssl.com/', verify=False)
