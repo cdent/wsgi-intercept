@@ -625,10 +625,21 @@ class WSGI_HTTPSConnection(HTTPSConnection, WSGI_HTTPConnection):
                     import ssl
                     if hasattr(self, '_context'):
                         self._context.check_hostname = self.assert_hostname
-                        if isinstance(self.cert_reqs, ssl.VerifyMode):
-                            self._context.verify_mode = self.cert_reqs
+                        self._check_hostname = self.assert_hostname     # Py3.6
+                        if hasattr(ssl, 'VerifyMode'):
+                            # Support for Python3.6 and higher
+                            if isinstance(self.cert_reqs, ssl.VerifyMode):
+                                self._context.verify_mode = self.cert_reqs
+                            else:
+                                self._context.verify_mode = ssl.VerifyMode[
+                                    self.cert_reqs]
+                        elif isinstance(self.cert_reqs, six.string_types):
+                            # Support for Python3.5 and below
+                            self._context.verify_mode = getattr(ssl,
+                                    self.cert_reqs,
+                                    self._context.verify_mode)
                         else:
-                            self._context.verify_mode = ssl.VerifyMode[self.cert_reqs]
+                            self._context.verify_mode = self.cert_reqs
 
                     if not hasattr(self, 'key_file'):
                         self.key_file = None
@@ -647,7 +658,8 @@ class WSGI_HTTPSConnection(HTTPSConnection, WSGI_HTTPConnection):
                             else:
                                 self._check_hostname = self.check_hostname
                 except (ImportError, AttributeError):
-                    pass
+                    import traceback
+                    traceback.print_exc()
                 HTTPSConnection.connect(self)
 
         except Exception:
