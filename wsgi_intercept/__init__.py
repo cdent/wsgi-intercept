@@ -14,7 +14,7 @@ Supported Libaries
 ==================
 
 ``wsgi_intercept`` works with a variety of HTTP clients in Python 2.7,
-3.4 and beyond, and in pypy.
+3.5 and beyond, and in pypy.
 
 * urllib2
 * urllib.request
@@ -115,8 +115,8 @@ it into all of the *other* Python Web testing frameworks.
 The Python 2 version of wsgi-intercept was the result. Kumar McMillan
 later took over maintenance.
 
-The current version is tested with Python 2.7, 3.4, 3.5, 3.6, and pypy
-and was assembled by `Chris Dent`_. Testing and documentation improvements
+The current version is tested with Python 2.7, 3.5-3.8, and pypy and pypy3.
+It was assembled by `Chris Dent`_. Testing and documentation improvements
 from `Sasha Hart`_.
 
 .. _"best Web testing framework":
