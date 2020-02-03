@@ -114,3 +114,13 @@ def test_empty_iterator():
             'http://some_hopefully_nonexistant_domain/', 'GET')
         assert app.success()
         assert content == b'second'
+
+
+def test_generator():
+    with InstalledApp(wsgi_app.generator_app, host=HOST) as app:
+        http = httplib2.Http()
+        resp, content = http.request(
+            'http://some_hopefully_nonexistant_domain/', 'GET')
+        assert app.success()
+        assert resp.get('content-type') == 'text/plain'
+        assert content == b'First generated line\nSecond generated line\n'

@@ -37,3 +37,9 @@ def raises_app(environ, start_response):
 def empty_string_app(environ, start_response):
     start_response('200 OK', [('Content-type', 'text/plain')])
     return [b'', b'second']
+
+
+def generator_app(environ, start_response):
+    start_response('200 OK', [('Content-type', 'text/plain')])
+    yield b'First generated line\n'
+    yield b'Second generated line\n'

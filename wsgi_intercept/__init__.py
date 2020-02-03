@@ -451,25 +451,6 @@ class wsgi_fake_socket:
             raise WSGIAppError(error, sys.exc_info())
         self.result = iter(app_result)
 
-        # send the headers
-
-        for k, v in self.headers:
-            if STRICT_RESPONSE_HEADERS:
-                if not (isinstance(k, str) and isinstance(v, str)):
-                    raise TypeError(
-                        "Header has a key '%s' or value '%s' "
-                        "which is not a native str." % (k, v))
-            try:
-                k = k.encode('ISO-8859-1')
-            except AttributeError:
-                pass
-            try:
-                v = v.encode('ISO-8859-1')
-            except AttributeError:
-                pass
-            self.output.write(k + b': ' + v + b"\n")
-        self.output.write(b'\n')
-
         ###
 
         # read all of the results.  the trick here is to get the *first*
@@ -485,6 +466,25 @@ class wsgi_fake_socket:
                 generator_data = next(self.result)
 
             finally:
+                # send the headers
+
+                for k, v in self.headers:
+                    if STRICT_RESPONSE_HEADERS:
+                        if not (isinstance(k, str) and isinstance(v, str)):
+                            raise TypeError(
+                                "Header has a key '%s' or value '%s' "
+                                "which is not a native str." % (k, v))
+                    try:
+                        k = k.encode('ISO-8859-1')
+                    except AttributeError:
+                        pass
+                    try:
+                        v = v.encode('ISO-8859-1')
+                    except AttributeError:
+                        pass
+                    self.output.write(k + b': ' + v + b"\n")
+                self.output.write(b'\n')
+
                 for data in self.write_results:
                     self.output.write(data)
 
