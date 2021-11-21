@@ -22,9 +22,7 @@ jobs:
                       env: TOXENV=py38
                     - python: 3.9
                       env: TOXENV=py39
-                    - python: pypy
-                      env: TOXENV=pypy
-                    - python: pypy3
+                    - python: pypy-3.8
                       env: TOXENV=pypy3
         name: ${{ matrix.env }} on Python ${{ matrix.python }}
         steps:
