@@ -17,6 +17,7 @@ def make_urllib3_override(HTTPConnectionPool, HTTPSConnectionPool,
             if 'strict' in kwargs and sys.version_info > (3, 0):
                 kwargs.pop('strict')
             kwargs.pop('socket_options', None)
+            kwargs.pop('server_hostname', None)
             WSGI_HTTPConnection.__init__(self, *args, **kwargs)
             HTTPConnection.__init__(self, *args, **kwargs)
 
@@ -28,6 +29,7 @@ def make_urllib3_override(HTTPConnectionPool, HTTPSConnectionPool,
                 kwargs.pop('strict')
             kwargs.pop('socket_options', None)
             kwargs.pop('key_password', None)
+            kwargs.pop('server_hostname', None)
             WSGI_HTTPSConnection.__init__(self, *args, **kwargs)
             HTTPSConnection.__init__(self, *args, **kwargs)
 

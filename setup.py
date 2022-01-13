@@ -1,7 +1,7 @@
 
 from setuptools import setup, find_packages
 
-VERSION = '1.9.2'
+VERSION = '1.9.3'
 
 CLASSIFIERS = """
 Environment :: Web Environment
