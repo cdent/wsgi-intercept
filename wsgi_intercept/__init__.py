@@ -260,7 +260,7 @@ def make_environ(inp, host, port, script_name):
         else:
             h = k.upper()
             h = h.replace(b'-', b'_')
-            environ['HTTP_' + h.decode('ISO-8859-1')] = v
+            environ['HTTP_' + str(h.decode('ISO-8859-1'))] = v
 
         if debuglevel >= 2:
             print('HEADER:', k, v)
