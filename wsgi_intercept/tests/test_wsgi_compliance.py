@@ -1,5 +1,5 @@
 import sys
-import py.test
+import pytest
 try:
     from urllib.parse import unquote
 except ImportError:
@@ -92,7 +92,7 @@ def test_script_name():
 def test_encoding_errors():
     with InstalledApp(wsgi_app.more_interesting_app, host=HOST):
         http = httplib2.Http()
-        with py.test.raises(UnicodeEncodeError):
+        with pytest.raises(UnicodeEncodeError):
             response, content = http.request(
                 'http://some_hopefully_nonexistant_domain/boom/baz',
                 headers={'Accept': u'application/\u2603'})

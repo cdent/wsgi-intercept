@@ -1,4 +1,4 @@
-import py.test
+import pytest
 from wsgi_intercept import httplib2_intercept, WSGIAppError
 from . import wsgi_app
 from .install import installer_class
@@ -42,7 +42,7 @@ def test_http_other_port():
 
 def test_bogus_domain():
     with InstalledApp(wsgi_app.simple_app, host=HOST, port=80):
-        with py.test.raises(gaierror):
+        with pytest.raises(gaierror):
             httplib2_intercept.HTTP_WSGIInterceptorWithTimeout(
                     "_nonexistant_domain_").connect()
 
@@ -80,6 +80,6 @@ def test_https_default_port():
 def test_app_error():
     with InstalledApp(wsgi_app.raises_app, host=HOST, port=80):
         http = httplib2.Http()
-        with py.test.raises(WSGIAppError):
+        with pytest.raises(WSGIAppError):
             http.request(
                 'http://some_hopefully_nonexistant_domain/')

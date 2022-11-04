@@ -115,7 +115,7 @@ it into all of the *other* Python Web testing frameworks.
 The Python 2 version of wsgi-intercept was the result. Kumar McMillan
 later took over maintenance.
 
-The current version is tested with Python 2.7, 3.5-3.8, and pypy and pypy3.
+The current version is tested with Python 2.7, 3.5-3.11, and pypy and pypy3.
 It was assembled by `Chris Dent`_. Testing and documentation improvements
 from `Sasha Hart`_.
 

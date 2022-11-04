@@ -1,5 +1,5 @@
 import os
-import py.test
+import pytest
 from wsgi_intercept import urllib3_intercept, WSGIAppError
 from . import wsgi_app
 from .install import installer_class, skipnetwork
@@ -38,12 +38,12 @@ def test_http_other_port():
 
 def test_bogus_domain():
     with InstalledApp(wsgi_app.simple_app, host=HOST, port=80):
-        with py.test.raises(urllib3.exceptions.ProtocolError):
+        with pytest.raises(urllib3.exceptions.ProtocolError):
             http.request("GET", "http://_nonexistant_domain_", retries=False)
 
 
 def test_proxy_handling():
-    with py.test.raises(RuntimeError) as exc:
+    with pytest.raises(RuntimeError) as exc:
         with InstalledApp(wsgi_app.simple_app, host=HOST, port=80,
                           proxy='some_proxy.com:1234'):
             http.request('GET', 'http://some_hopefully_nonexistant_domain:80/')
@@ -82,7 +82,7 @@ def test_socket_options():
 
 def test_app_error():
     with InstalledApp(wsgi_app.raises_app, host=HOST, port=80):
-        with py.test.raises(WSGIAppError):
+        with pytest.raises(WSGIAppError):
             http.request('GET', 'http://some_hopefully_nonexistant_domain/')
 
 

@@ -22,6 +22,10 @@ jobs:
                       env: py38
                     - python: 3.9
                       env: py39
+                    - python: "3.10"
+                      env: py310
+                    - python: "3.11"
+                      env: py311
                     - python: pypy-3.8
                       env: pypy3
         name: ${{ matrix.env }} on Python ${{ matrix.python }}
