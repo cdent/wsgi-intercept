@@ -8,7 +8,7 @@ not. There are tests for how it delivers request headers, but
 not the other way round. Let's write some tests to fix that.
 """
 
-import py.test
+import pytest
 import requests
 import six
 
@@ -74,7 +74,7 @@ def test_encoding_violation():
     with RequestsInterceptor(header_app) as url:
         wsgi_intercept.STRICT_RESPONSE_HEADERS = True
 
-        with py.test.raises(TypeError) as error:
+        with pytest.raises(TypeError) as error:
             response = requests.get(url)
 
         assert (

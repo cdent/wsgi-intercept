@@ -1,5 +1,5 @@
 import os
-import py.test
+import pytest
 from wsgi_intercept import urllib_intercept, WSGIAppError
 from . import wsgi_app
 from .install import installer_class, skipnetwork
@@ -35,7 +35,7 @@ def test_http_other_port():
 
 def test_proxy_handling():
     """Like requests, urllib gets confused about proxy early on."""
-    with py.test.raises(RuntimeError) as exc:
+    with pytest.raises(RuntimeError) as exc:
         with InstalledApp(wsgi_app.simple_app, host=HOST, port=80,
                           proxy='some.host:1234'):
             url_lib.urlopen('http://some_hopefully_nonexistant_domain:80/')
@@ -62,7 +62,7 @@ def test_https_default_port():
 
 def test_app_error():
     with InstalledApp(wsgi_app.raises_app, host=HOST, port=80):
-        with py.test.raises(WSGIAppError):
+        with pytest.raises(WSGIAppError):
             url_lib.urlopen('http://some_hopefully_nonexistant_domain/')
 
 

@@ -7,7 +7,7 @@ The context manager is based on the InterceptFixture used in gabbi.
 import socket
 from uuid import uuid4
 
-import py.test
+import pytest
 import requests
 import urllib3
 from httplib2 import Http, ServerNotFoundError
@@ -99,7 +99,7 @@ def test_httpclient_in_out():
         assert 'WSGI intercept successful!' in content
 
     # outside the context manager the intercept does not work
-    with py.test.raises(socket.gaierror):
+    with pytest.raises(socket.gaierror):
         client = http_client.HTTPConnection(hostname, port)
         client.request('GET', '/')
 
@@ -159,7 +159,7 @@ def test_httplib2_in_out():
         assert 'WSGI intercept successful!' in content.decode('utf-8')
 
     # outside the context manager the intercept does not work
-    with py.test.raises(ServerNotFoundError):
+    with pytest.raises(ServerNotFoundError):
         http.request(url)
 
 
@@ -194,7 +194,7 @@ def test_requests_in_out():
         assert 'WSGI intercept successful!' in response.text
 
     # outside the context manager the intercept does not work
-    with py.test.raises(requests.ConnectionError):
+    with pytest.raises(requests.ConnectionError):
         requests.get(url)
 
 
@@ -229,7 +229,7 @@ def test_urllib3_in_out():
         assert 'WSGI intercept successful!' in str(response.data)
 
     # outside the context manager the intercept does not work
-    with py.test.raises(urllib3.exceptions.ProtocolError):
+    with pytest.raises(urllib3.exceptions.ProtocolError):
         httppool.request('GET', url, retries=False)
 
 
@@ -264,7 +264,7 @@ def test_urllib_in_out():
         assert 'WSGI intercept successful!' in response.read().decode('utf-8')
 
     # outside the context manager the intercept does not work
-    with py.test.raises(URLError):
+    with pytest.raises(URLError):
         urlopen(url)
 
 
@@ -289,11 +289,11 @@ def test_double_nested_context_interceptor():
         assert 'WSGI intercept successful!' in str(response.data)
 
         # outside the inner context manager url2 does not work
-        with py.test.raises(urllib3.exceptions.HTTPError):
+        with pytest.raises(urllib3.exceptions.HTTPError):
             httppool.request('GET', url2, retries=False)
 
     # outside both context managers neither url works
-    with py.test.raises(urllib3.exceptions.HTTPError):
+    with pytest.raises(urllib3.exceptions.HTTPError):
         httppool.request('GET', url2, retries=False)
-    with py.test.raises(urllib3.exceptions.HTTPError):
+    with pytest.raises(urllib3.exceptions.HTTPError):
         httppool.request('GET', url1, retries=False)

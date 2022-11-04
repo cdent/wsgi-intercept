@@ -1,4 +1,4 @@
-import py.test
+import pytest
 from wsgi_intercept import http_client_intercept, WSGIAppError
 from . import wsgi_app
 from .install import installer_class, skipnetwork
@@ -57,7 +57,7 @@ def test_proxy_handling():
 def test_app_error():
     with InstalledApp(wsgi_app.raises_app, host=HOST, port=80):
         http_client = http_lib.HTTPConnection(HOST)
-        with py.test.raises(WSGIAppError):
+        with pytest.raises(WSGIAppError):
             http_client.request('GET', '/')
             http_client.getresponse().read()
         http_client.close()
