@@ -42,7 +42,7 @@ META = {
             'pytest>=2.4',
             'httplib2',
             'requests>=2.0.1',
-            'urllib3>=1.11.0',
+            'urllib3>=1.11.0,<2.0.0',
         ],
         'docs': [
             'sphinx',
