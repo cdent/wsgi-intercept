@@ -6,16 +6,10 @@ jobs:
         strategy:
             matrix:
                 include:
-                    - python: 2.7
-                      env: py27
                     - python: 3.9
                       env: pep8
                     - python: 3.9
                       env: docs
-                    - python: 3.5
-                      env: py35
-                    - python: 3.6
-                      env: py36
                     - python: 3.7
                       env: py37
                     - python: 3.8
@@ -26,6 +20,8 @@ jobs:
                       env: py310
                     - python: "3.11"
                       env: py311
+                    - python: "3.12"
+                      env: py312
                     - python: pypy-3.8
                       env: pypy3
         name: ${{ matrix.env }} on Python ${{ matrix.python }}
