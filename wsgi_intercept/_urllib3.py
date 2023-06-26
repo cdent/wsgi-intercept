@@ -1,4 +1,4 @@
-"""Common code of urllib3 and requests intercepts."""
+"""Common code of urllib3 (<2.0.0) and requests intercepts."""
 
 import os
 import sys

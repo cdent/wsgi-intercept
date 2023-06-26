@@ -22,7 +22,7 @@ Supported Libaries
 * http.client
 * httplib2
 * requests
-* urllib3
+* urllib3 (<2.0.0, urllib3 2 support is in progress)
 
 How Does It Work?
 =================
@@ -88,7 +88,7 @@ Packages Intercepted
 Unfortunately each of the HTTP client libraries use their own specific
 mechanism for making HTTP call-outs, so individual implementations are
 needed. At this time there are implementations for ``httplib2``,
-``urllib3`` and ``requests`` in both Python 2 and 3, ``urllib2`` and
+``urllib3`` (<2.0.0) and ``requests`` in both Python 2 and 3, ``urllib2`` and
 ``httplib`` in Python 2 and ``urllib.request`` and ``http.client``
 in Python 3.
 
