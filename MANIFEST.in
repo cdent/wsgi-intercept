@@ -1,2 +1,2 @@
-include LICENSE Makefile
+include LICENSE Makefile tox.ini
 recursive-include docs *
