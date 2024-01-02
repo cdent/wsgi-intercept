@@ -1,5 +1,8 @@
 name: tests
-on: [push, workflow_dispatch]
+on:
+- push
+- pull_request
+- workflow_dispatch
 jobs:
     build:
         runs-on: ubuntu-latest
@@ -20,6 +23,8 @@ jobs:
                       env: py310
                     - python: "3.11"
                       env: py311
+                    - python: "3.12"
+                      env: py312
                     - python: pypy-3.8
                       env: pypy3
         name: ${{ matrix.env }} on Python ${{ matrix.python }}
