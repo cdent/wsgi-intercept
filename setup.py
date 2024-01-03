@@ -1,7 +1,7 @@
 
 from setuptools import setup, find_packages
 
-VERSION = '1.12.1'
+VERSION = '1.13.0'
 
 CLASSIFIERS = """
 Environment :: Web Environment
@@ -11,10 +11,12 @@ Operating System :: OS Independent
 Programming Language :: Python :: 2
 Programming Language :: Python :: 2.7
 Programming Language :: Python :: 3
-Programming Language :: Python :: 3.4
-Programming Language :: Python :: 3.5
-Programming Language :: Python :: 3.6
 Programming Language :: Python :: 3.7
+Programming Language :: Python :: 3.8
+Programming Language :: Python :: 3.9
+Programming Language :: Python :: 3.10
+Programming Language :: Python :: 3.11
+Programming Language :: Python :: 3.12
 Topic :: Internet :: WWW/HTTP :: WSGI
 Topic :: Software Development :: Testing
 """.strip().splitlines()
