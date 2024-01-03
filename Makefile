@@ -11,7 +11,6 @@ clean:
 	rm -r wsgi_intercept.egg-info || true
 	rm *.bundle || true
 	rm -r *-bundle* || true
-	cd docs && make clean
 
 reclean:
 	find wsgi_intercept test -name "*.py[co]" |xargs rm || true
@@ -21,13 +20,9 @@ reclean:
 	rm -r wsgi_intercept.egg-info || true
 	rm *.bundle || true
 	rm -r *-bundle* || true
-	cd docs && make clean
 
 test:
 	tox --skip-missing-interpreters
-
-doctest:
-	cd docs && make doctest
 
 tagv:
 	git tag -a \
