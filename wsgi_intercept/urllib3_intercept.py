@@ -1,8 +1,5 @@
 """Intercept HTTP connections that use
 `urllib3 <https://urllib3.readthedocs.org/>`_.
-
-Note that currently only urllib3 <2.0.0 is supported. 2.0.0 support
-is in progress.
 """
 
 from urllib3.connectionpool import HTTPConnectionPool, HTTPSConnectionPool

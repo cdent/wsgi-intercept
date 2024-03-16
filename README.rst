@@ -13,8 +13,8 @@ threads to test your Web app.
 Supported Libaries
 ==================
 
-``wsgi_intercept`` works with a variety of HTTP clients in Python 2.7,
-3.5 and beyond, and in pypy.
+``wsgi_intercept`` works with a variety of HTTP clients in Python 3.7
+and beyond, and in pypy.
 
 * urllib2
 * urllib.request
@@ -22,7 +22,7 @@ Supported Libaries
 * http.client
 * httplib2
 * requests
-* urllib3 (<2.0.0, urllib3 2 support is in progress)
+* urllib3
 
 How Does It Work?
 =================
@@ -88,13 +88,8 @@ Packages Intercepted
 Unfortunately each of the HTTP client libraries use their own specific
 mechanism for making HTTP call-outs, so individual implementations are
 needed. At this time there are implementations for ``httplib2``,
-``urllib3`` (<2.0.0) and ``requests`` in both Python 2 and 3, ``urllib2`` and
-``httplib`` in Python 2 and ``urllib.request`` and ``http.client``
+``urllib3``, ``requests``, ``urllib.request``, and ``http.client``
 in Python 3.
-
-If you are using Python 2 and need support for a different HTTP
-client, require a version of ``wsgi_intercept<0.6``. Earlier versions
-include support for ``webtest``, ``webunit`` and ``zope.testbrowser``.
 
 The best way to figure out how to use interception is to inspect
 `the tests`_. More comprehensive documentation available upon
@@ -115,9 +110,8 @@ it into all of the *other* Python Web testing frameworks.
 The Python 2 version of wsgi-intercept was the result. Kumar McMillan
 later took over maintenance.
 
-The current version is tested with Python 2.7, 3.5-3.11, and pypy and pypy3.
-It was assembled by `Chris Dent`_. Testing and documentation improvements
-from `Sasha Hart`_.
+The current version is tested with Python 3.7-3.12, and pypy3. It was assembled
+by `Chris Dent`_. Testing and documentation improvements from `Sasha Hart`_.
 
 .. _"best Web testing framework":
      http://blog.ianbicking.org/best-of-the-web-app-test-frameworks.html

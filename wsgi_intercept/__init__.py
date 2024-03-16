@@ -144,15 +144,9 @@ import sys
 import traceback
 from io import BytesIO
 
-# Don't use six here because it is unquote_to_bytes that we want in
-# Python 3.
-try:
-    from urllib.parse import unquote_to_bytes as url_unquote
-except ImportError:
-    from urllib import unquote as url_unquote
+from urllib.parse import unquote_to_bytes as url_unquote
 
-import six
-from six.moves.http_client import HTTPConnection, HTTPSConnection
+from http.client import HTTPConnection, HTTPSConnection
 
 
 # Set this to True to cause response headers from the intercepted
@@ -227,8 +221,7 @@ def make_environ(inp, host, port, script_name):
     environ = {}
 
     method_line = inp.readline()
-    if six.PY3:
-        method_line = method_line.decode('ISO-8859-1')
+    method_line = method_line.decode('ISO-8859-1')
 
     content_type = None
     content_length = None
@@ -302,13 +295,11 @@ def make_environ(inp, host, port, script_name):
     # fill out our dictionary.
     #
 
-    # In Python3 turn the bytes of the path info into a string of
-    # latin-1 code points, because that's what the spec says we must
-    # do to be like a server. Later various libraries will be forced
-    # to decode and then reencode to get the UTF-8 that everyone
-    # wants.
-    if six.PY3:
-        path_info = path_info.decode('latin-1')
+    # Turn the bytes of the path info into a string of latin-1 code points,
+    # because that's what the spec says we must do to be like a server. Later
+    # various libraries will be forced to decode and then reencode to get the
+    # UTF-8 that everyone wants.
+    path_info = path_info.decode('latin-1')
 
     environ.update({
         "wsgi.version": (1, 0),
@@ -633,7 +624,7 @@ class WSGI_HTTPSConnection(HTTPSConnection, WSGI_HTTPConnection):
                             else:
                                 self._context.verify_mode = ssl.VerifyMode[
                                     self.cert_reqs]
-                        elif isinstance(self.cert_reqs, six.string_types):
+                        elif isinstance(self.cert_reqs, str):
                             # Support for Python3.5 and below
                             self._context.verify_mode = getattr(ssl,
                                     self.cert_reqs,

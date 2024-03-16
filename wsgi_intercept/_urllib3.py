@@ -8,16 +8,32 @@ from . import WSGI_HTTPConnection, WSGI_HTTPSConnection, wsgi_fake_socket
 
 wsgi_fake_socket.settimeout = lambda self, timeout: None
 
+HTTP_KEYWORD_POPS = [
+    'strict',
+    'socket_options',
+    'server_hostname',
+]
+
+HTTPS_KEYWORD_POPS = HTTP_KEYWORD_POPS + [
+    'key_password',
+    'server_hostname',
+    'cert_reqs',
+    'ca_certs',
+    'ca_cert_dir',
+    'assert_hostname',
+    'assert_fingerprint',
+    'ssl_version',
+    'ssl_minimum_version',
+    'ssl_maximum_version',
+]
 
 def make_urllib3_override(HTTPConnectionPool, HTTPSConnectionPool,
                           HTTPConnection, HTTPSConnection):
 
     class HTTP_WSGIInterceptor(WSGI_HTTPConnection, HTTPConnection):
         def __init__(self, *args, **kwargs):
-            if 'strict' in kwargs and sys.version_info > (3, 0):
-                kwargs.pop('strict')
-            kwargs.pop('socket_options', None)
-            kwargs.pop('server_hostname', None)
+            for kw in HTTP_KEYWORD_POPS:
+                kwargs.pop(kw, None)
             WSGI_HTTPConnection.__init__(self, *args, **kwargs)
             HTTPConnection.__init__(self, *args, **kwargs)
 
@@ -25,14 +41,13 @@ def make_urllib3_override(HTTPConnectionPool, HTTPSConnectionPool,
         is_verified = True
 
         def __init__(self, *args, **kwargs):
-            if 'strict' in kwargs and sys.version_info > (3, 0):
-                kwargs.pop('strict')
-            kwargs.pop('socket_options', None)
-            kwargs.pop('key_password', None)
-            kwargs.pop('server_hostname', None)
+            print(f"pre: {args} ::: {kwargs}")
+            for kw in HTTPS_KEYWORD_POPS:
+                kwargs.pop(kw, None)
             if sys.version_info > (3, 12):
                 kwargs.pop('key_file', None)
                 kwargs.pop('cert_file', None)
+            print(f"post: {args} ::: {kwargs}")
             WSGI_HTTPSConnection.__init__(self, *args, **kwargs)
             HTTPSConnection.__init__(self, *args, **kwargs)
 

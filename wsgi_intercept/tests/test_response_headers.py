@@ -10,7 +10,6 @@ not the other way round. Let's write some tests to fix that.
 
 import pytest
 import requests
-import six
 
 import wsgi_intercept
 from wsgi_intercept.interceptor import RequestsInterceptor
@@ -56,10 +55,7 @@ def test_header_app():
 def test_encoding_violation():
     """If the header is unicode we expect boom."""
     header_key = 'request-id'
-    if six.PY2:
-        header_value = u'alpha'
-    else:
-        header_value = b'alpha'
+    header_value = b'alpha'
     # we expect our http library to give us a str
     returned_header = 'alpha'
 
