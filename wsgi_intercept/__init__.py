@@ -526,6 +526,23 @@ class WSGI_HTTPConnection(HTTPConnection):
     Intercept all traffic to certain hosts & redirect into a WSGI
     application object.
     """
+
+    def __init__(self, *args, **kwargs):
+        print(f"args1 is {args}, kwargs is {kwargs}")
+        if 'host' in kwargs:
+            host = kwargs.pop('host')
+            if 'port' in kwargs:
+                port = kwargs.pop('port')
+            else:
+                port = None
+            print(f"args2 is {args}, kwargs is {kwargs}")
+            super().__init__(host, port, *args, **kwargs)
+        else:
+            if len(args) > 2:
+                args = args[0:2]
+            super().__init__(*args, **kwargs)
+
+
     def get_app(self, host, port):
         """
         Return the app object for the given (host, port).
@@ -579,9 +596,6 @@ class WSGI_HTTPSConnection(HTTPSConnection, WSGI_HTTPConnection):
     application object.
     """
 
-    def __init__(self, *args, **kwargs):
-        print("getting %s ::: %s" % (args, kwargs))
-        super().__init__(*args, **kwargs)
 
     def get_app(self, host, port):
         """

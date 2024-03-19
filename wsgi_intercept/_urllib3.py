@@ -32,7 +32,6 @@ def make_urllib3_override(HTTPConnectionPool, HTTPSConnectionPool,
 
     class HTTP_WSGIInterceptor(WSGI_HTTPConnection, HTTPConnection):
         def __init__(self, *args, **kwargs):
-            print(f"http pre: {args} ::: {kwargs}")
             for kw in HTTP_KEYWORD_POPS:
                 kwargs.pop(kw, None)
             WSGI_HTTPConnection.__init__(self, *args, **kwargs)
@@ -42,19 +41,14 @@ def make_urllib3_override(HTTPConnectionPool, HTTPSConnectionPool,
         is_verified = True
 
         def __init__(self, *args, **kwargs):
-            print(f"https pre: {args} ::: {kwargs}")
+            print(f"{args}:::{kwargs}")
             for kw in HTTPS_KEYWORD_POPS:
                 kwargs.pop(kw, None)
             if sys.version_info > (3, 12):
                 kwargs.pop('key_file', None)
                 kwargs.pop('cert_file', None)
-            print(f"https post: {args} ::: {kwargs}")
-            host = kwargs.pop('host')
-            port = kwargs.pop('port')
-            WSGI_HTTPSConnection.__init__(self, host, port, *args, **kwargs)
-            print("after wsgi")
+            WSGI_HTTPSConnection.__init__(self, *args, **kwargs)
             HTTPSConnection.__init__(self, *args, **kwargs)
-            print("after https")
 
     def install():
         if 'http_proxy' in os.environ or 'https_proxy' in os.environ:
