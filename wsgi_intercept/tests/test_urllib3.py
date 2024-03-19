@@ -54,7 +54,7 @@ def test_proxy_handling():
     del os.environ['http_proxy']
 
 
-def test_https():
+def test_https_meo():
     with InstalledApp(wsgi_app.simple_app, host=HOST, port=443) as app:
         resp = http.request(
             'GET', 'https://some_hopefully_nonexistant_domain:443/')

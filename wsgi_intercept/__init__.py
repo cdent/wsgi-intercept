@@ -578,6 +578,11 @@ class WSGI_HTTPSConnection(HTTPSConnection, WSGI_HTTPConnection):
     Intercept all traffic to certain hosts & redirect into a WSGI
     application object.
     """
+
+    def __init__(self, *args, **kwargs):
+        print("getting %s ::: %s" % (args, kwargs))
+        super().__init__(*args, **kwargs)
+
     def get_app(self, host, port):
         """
         Return the app object for the given (host, port).
