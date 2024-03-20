@@ -3,10 +3,7 @@ import pytest
 from wsgi_intercept import urllib_intercept, WSGIAppError
 from . import wsgi_app
 from .install import installer_class, skipnetwork
-try:
-    import urllib.request as url_lib
-except ImportError:
-    import urllib2 as url_lib
+import urllib.request as url_lib
 
 HOST = 'some_hopefully_nonexistant_domain'
 

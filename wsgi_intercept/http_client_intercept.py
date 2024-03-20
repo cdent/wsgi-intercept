@@ -1,23 +1,14 @@
 """Intercept HTTP connections that use httplib (Py2) or http.client (Py3).
 """
 
-try:
-    import http.client as http_lib
-except ImportError:
-    import httplib as http_lib
+import http.client as http_lib
 
 from . import WSGI_HTTPConnection, WSGI_HTTPSConnection
 
-try:
-    from http.client import (
-            HTTPConnection as OriginalHTTPConnection,
-            HTTPSConnection as OriginalHTTPSConnection
-    )
-except ImportError:
-    from httplib import (
-            HTTPConnection as OriginalHTTPConnection,
-            HTTPSConnection as OriginalHTTPSConnection
-    )
+from http.client import (
+        HTTPConnection as OriginalHTTPConnection,
+        HTTPSConnection as OriginalHTTPSConnection
+)
 
 
 class HTTP_WSGIInterceptor(WSGI_HTTPConnection, http_lib.HTTPConnection):

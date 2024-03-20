@@ -27,6 +27,7 @@ HTTPS_KEYWORD_POPS = HTTP_KEYWORD_POPS + [
     'ssl_maximum_version',
 ]
 
+
 def make_urllib3_override(HTTPConnectionPool, HTTPSConnectionPool,
                           HTTPConnection, HTTPSConnection):
 

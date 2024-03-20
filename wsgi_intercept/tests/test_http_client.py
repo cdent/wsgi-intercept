@@ -2,10 +2,7 @@ import pytest
 from wsgi_intercept import http_client_intercept, WSGIAppError
 from . import wsgi_app
 from .install import installer_class, skipnetwork
-try:
-    import http.client as http_lib
-except ImportError:
-    import httplib as http_lib
+import http.client as http_lib
 
 HOST = 'some_hopefully_nonexistant_domain'
 

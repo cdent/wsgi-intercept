@@ -4,11 +4,6 @@ Simple WSGI applications for testing.
 
 from pprint import pformat
 
-try:
-    bytes
-except ImportError:
-    bytes = str
-
 
 def simple_app(environ, start_response):
     """Simplest possible application object"""

@@ -88,7 +88,7 @@ Packages Intercepted
 Unfortunately each of the HTTP client libraries use their own specific
 mechanism for making HTTP call-outs, so individual implementations are
 needed. At this time there are implementations for ``httplib2``,
-``urllib3``, ``requests``, ``urllib.request``, and ``http.client``
+``urllib3``, ``requests``, ``urllib.request`` and ``http.client``
 in Python 3.
 
 The best way to figure out how to use interception is to inspect
@@ -110,8 +110,9 @@ it into all of the *other* Python Web testing frameworks.
 The Python 2 version of wsgi-intercept was the result. Kumar McMillan
 later took over maintenance.
 
-The current version is tested with Python 3.7-3.12, and pypy3. It was assembled
-by `Chris Dent`_. Testing and documentation improvements from `Sasha Hart`_.
+The current version is tested with Python 3.7-3.12, and pypy3.  It was
+assembled by `Chris Dent`_. Testing and documentation improvements from
+`Sasha Hart`_.
 
 .. _"best Web testing framework":
      http://blog.ianbicking.org/best-of-the-web-app-test-frameworks.html
