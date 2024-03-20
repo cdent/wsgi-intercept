@@ -528,14 +528,18 @@ class WSGI_HTTPConnection(HTTPConnection):
     """
 
     def __init__(self, *args, **kwargs):
-        print(f"args1 is {args}, kwargs is {kwargs}")
+        """
+        Do a complex dance to deal with urllib3's method signature
+        constraints.
+        """
+        # TODO: This seems really really fragile but is passing
+        # tests.
         if 'host' in kwargs:
             host = kwargs.pop('host')
             if 'port' in kwargs:
                 port = kwargs.pop('port')
             else:
                 port = None
-            print(f"args2 is {args}, kwargs is {kwargs}")
             super().__init__(host, port, *args, **kwargs)
         else:
             if len(args) > 2:
@@ -634,22 +638,31 @@ class WSGI_HTTPSConnection(HTTPSConnection, WSGI_HTTPConnection):
                 try:
                     import ssl
                     if hasattr(self, '_context'):
+                        # Extract cert_reqs from requests + urllib3.
+                        # They do some of their own SSL context management
+                        # that wsgi intercept routes around, so we need to
+                        # be careful.
+                        if hasattr(self, '_intercept_cert_reqs'):
+                            cert_reqs = self._intercept_cert_reqs
+                        else:
+                            cert_reqs = self.cert_reqs
+
                         self._context.check_hostname = self.assert_hostname
                         self._check_hostname = self.assert_hostname     # Py3.6
                         if hasattr(ssl, 'VerifyMode'):
                             # Support for Python3.6 and higher
-                            if isinstance(self.cert_reqs, ssl.VerifyMode):
-                                self._context.verify_mode = self.cert_reqs
+                            if isinstance(cert_reqs, ssl.VerifyMode):
+                                self._context.verify_mode = cert_reqs
                             else:
                                 self._context.verify_mode = ssl.VerifyMode[
-                                    self.cert_reqs]
-                        elif isinstance(self.cert_reqs, str):
+                                    cert_reqs]
+                        elif isinstance(cert_reqs, str):
                             # Support for Python3.5 and below
                             self._context.verify_mode = getattr(ssl,
-                                    self.cert_reqs,
+                                    cert_reqs,
                                     self._context.verify_mode)
                         else:
-                            self._context.verify_mode = self.cert_reqs
+                            self._context.verify_mode = cert_reqs
 
                     if not hasattr(self, 'key_file'):
                         self.key_file = None
@@ -668,7 +681,6 @@ class WSGI_HTTPSConnection(HTTPSConnection, WSGI_HTTPConnection):
                             else:
                                 self._check_hostname = self.check_hostname
                 except (ImportError, AttributeError):
-                    import traceback
                     traceback.print_exc()
                 HTTPSConnection.connect(self)
 

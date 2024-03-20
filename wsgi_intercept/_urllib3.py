@@ -42,6 +42,8 @@ def make_urllib3_override(HTTPConnectionPool, HTTPSConnectionPool,
 
         def __init__(self, *args, **kwargs):
             print(f"{args}:::{kwargs}")
+            if 'cert_reqs' in kwargs and kwargs['cert_reqs'] is not None:
+                self._intercept_cert_reqs = kwargs.pop("cert_reqs")
             for kw in HTTPS_KEYWORD_POPS:
                 kwargs.pop(kw, None)
             if sys.version_info > (3, 12):
