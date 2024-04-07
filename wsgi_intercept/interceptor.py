@@ -4,7 +4,7 @@
 from importlib import import_module
 from uuid import uuid4
 
-from six.moves.urllib import parse as urlparse
+from urllib import parse as urlparse
 
 import wsgi_intercept
 

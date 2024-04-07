@@ -11,13 +11,9 @@ import pytest
 import requests
 import urllib3
 from httplib2 import Http, ServerNotFoundError
-# don't use six as the monkey patching gets confused
-try:
-    import http.client as http_client
-except ImportError:
-    import httplib as http_client
-from six.moves.urllib.request import urlopen
-from six.moves.urllib.error import URLError
+import http.client as http_client
+from urllib.request import urlopen
+from urllib.error import URLError
 
 from wsgi_intercept.interceptor import (
     Interceptor, HttpClientInterceptor, Httplib2Interceptor,

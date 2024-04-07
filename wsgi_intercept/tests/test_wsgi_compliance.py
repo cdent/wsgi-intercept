@@ -1,9 +1,6 @@
 import sys
 import pytest
-try:
-    from urllib.parse import unquote
-except ImportError:
-    from urllib import unquote
+from urllib.parse import unquote
 from wsgi_intercept import httplib2_intercept
 from . import wsgi_app
 from .install import installer_class

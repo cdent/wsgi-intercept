@@ -8,8 +8,6 @@ Environment :: Web Environment
 Intended Audience :: Developers
 License :: OSI Approved :: MIT License
 Operating System :: OS Independent
-Programming Language :: Python :: 2
-Programming Language :: Python :: 2.7
 Programming Language :: Python :: 3
 Programming Language :: Python :: 3.7
 Programming Language :: Python :: 3.8
@@ -36,15 +34,13 @@ META = {
     'license': 'MIT License',
     'classifiers': CLASSIFIERS,
     'packages': find_packages(),
-    'install_requires': [
-        'six',
-    ],
+    'python_requires': '>=3',
     'extras_require': {
         'testing': [
             'pytest>=2.4',
             'httplib2',
             'requests>=2.0.1',
-            'urllib3>=1.11.0,<2.0.0',
+            'urllib3>=2.0.0',
         ],
         'docs': [
             'sphinx',

@@ -4,10 +4,7 @@ aka urllib2 (Python 2).
 
 import os
 
-try:
-    import urllib.request as url_lib
-except ImportError:
-    import urllib2 as url_lib
+import urllib.request as url_lib
 
 from . import WSGI_HTTPConnection, WSGI_HTTPSConnection
 

@@ -13,8 +13,8 @@ threads to test your Web app.
 Supported Libaries
 ==================
 
-``wsgi_intercept`` works with a variety of HTTP clients in Python 2.7,
-3.7 and beyond, and in pypy.
+``wsgi_intercept`` works with a variety of HTTP clients in Python 3.7
+and beyond, and in pypy.
 
 * urllib2
 * urllib.request
@@ -22,7 +22,7 @@ Supported Libaries
 * http.client
 * httplib2
 * requests
-* urllib3 (<2.0.0, urllib3 2 support is in progress)
+* urllib3
 
 How Does It Work?
 =================
@@ -88,13 +88,8 @@ Packages Intercepted
 Unfortunately each of the HTTP client libraries use their own specific
 mechanism for making HTTP call-outs, so individual implementations are
 needed. At this time there are implementations for ``httplib2``,
-``urllib3`` (<2.0.0) and ``requests`` in both Python 2 and 3, ``urllib2`` and
-``httplib`` in Python 2 and ``urllib.request`` and ``http.client``
+``urllib3``, ``requests``, ``urllib.request`` and ``http.client``
 in Python 3.
-
-If you are using Python 2 and need support for a different HTTP
-client, require a version of ``wsgi_intercept<0.6``. Earlier versions
-include support for ``webtest``, ``webunit`` and ``zope.testbrowser``.
 
 The best way to figure out how to use interception is to inspect
 `the tests`_. More comprehensive documentation available upon
@@ -115,9 +110,9 @@ it into all of the *other* Python Web testing frameworks.
 The Python 2 version of wsgi-intercept was the result. Kumar McMillan
 later took over maintenance.
 
-The current version is tested with Python 2.7, 3.5-3.11, and pypy and pypy3.
-It was assembled by `Chris Dent`_. Testing and documentation improvements
-from `Sasha Hart`_.
+The current version is tested with Python 3.7-3.12, and pypy3.  It was
+assembled by `Chris Dent`_. Testing and documentation improvements from
+`Sasha Hart`_.
 
 .. _"best Web testing framework":
      http://blog.ianbicking.org/best-of-the-web-app-test-frameworks.html
@@ -144,15 +139,9 @@ import sys
 import traceback
 from io import BytesIO
 
-# Don't use six here because it is unquote_to_bytes that we want in
-# Python 3.
-try:
-    from urllib.parse import unquote_to_bytes as url_unquote
-except ImportError:
-    from urllib import unquote as url_unquote
+from urllib.parse import unquote_to_bytes as url_unquote
 
-import six
-from six.moves.http_client import HTTPConnection, HTTPSConnection
+from http.client import HTTPConnection, HTTPSConnection
 
 
 # Set this to True to cause response headers from the intercepted
@@ -227,8 +216,7 @@ def make_environ(inp, host, port, script_name):
     environ = {}
 
     method_line = inp.readline()
-    if six.PY3:
-        method_line = method_line.decode('ISO-8859-1')
+    method_line = method_line.decode('ISO-8859-1')
 
     content_type = None
     content_length = None
@@ -302,13 +290,11 @@ def make_environ(inp, host, port, script_name):
     # fill out our dictionary.
     #
 
-    # In Python3 turn the bytes of the path info into a string of
-    # latin-1 code points, because that's what the spec says we must
-    # do to be like a server. Later various libraries will be forced
-    # to decode and then reencode to get the UTF-8 that everyone
-    # wants.
-    if six.PY3:
-        path_info = path_info.decode('latin-1')
+    # Turn the bytes of the path info into a string of latin-1 code points,
+    # because that's what the spec says we must do to be like a server. Later
+    # various libraries will be forced to decode and then reencode to get the
+    # UTF-8 that everyone wants.
+    path_info = path_info.decode('latin-1')
 
     environ.update({
         "wsgi.version": (1, 0),
@@ -535,6 +521,26 @@ class WSGI_HTTPConnection(HTTPConnection):
     Intercept all traffic to certain hosts & redirect into a WSGI
     application object.
     """
+
+    def __init__(self, *args, **kwargs):
+        """
+        Do a complex dance to deal with urllib3's method signature
+        constraints.
+        """
+        # TODO: This seems really really fragile but is passing
+        # tests.
+        if 'host' in kwargs:
+            host = kwargs.pop('host')
+            if 'port' in kwargs:
+                port = kwargs.pop('port')
+            else:
+                port = None
+            super().__init__(host, port, *args, **kwargs)
+        else:
+            if len(args) > 2:
+                args = args[0:2]
+            super().__init__(*args, **kwargs)
+
     def get_app(self, host, port):
         """
         Return the app object for the given (host, port).
@@ -587,6 +593,7 @@ class WSGI_HTTPSConnection(HTTPSConnection, WSGI_HTTPConnection):
     Intercept all traffic to certain hosts & redirect into a WSGI
     application object.
     """
+
     def get_app(self, host, port):
         """
         Return the app object for the given (host, port).
@@ -624,22 +631,31 @@ class WSGI_HTTPSConnection(HTTPSConnection, WSGI_HTTPConnection):
                 try:
                     import ssl
                     if hasattr(self, '_context'):
+                        # Extract cert_reqs from requests + urllib3.
+                        # They do some of their own SSL context management
+                        # that wsgi intercept routes around, so we need to
+                        # be careful.
+                        if hasattr(self, '_intercept_cert_reqs'):
+                            cert_reqs = self._intercept_cert_reqs
+                        else:
+                            cert_reqs = self.cert_reqs
+
                         self._context.check_hostname = self.assert_hostname
                         self._check_hostname = self.assert_hostname     # Py3.6
                         if hasattr(ssl, 'VerifyMode'):
                             # Support for Python3.6 and higher
-                            if isinstance(self.cert_reqs, ssl.VerifyMode):
-                                self._context.verify_mode = self.cert_reqs
+                            if isinstance(cert_reqs, ssl.VerifyMode):
+                                self._context.verify_mode = cert_reqs
                             else:
                                 self._context.verify_mode = ssl.VerifyMode[
-                                    self.cert_reqs]
-                        elif isinstance(self.cert_reqs, six.string_types):
+                                    cert_reqs]
+                        elif isinstance(cert_reqs, str):
                             # Support for Python3.5 and below
                             self._context.verify_mode = getattr(ssl,
-                                    self.cert_reqs,
+                                    cert_reqs,
                                     self._context.verify_mode)
                         else:
-                            self._context.verify_mode = self.cert_reqs
+                            self._context.verify_mode = cert_reqs
 
                     if not hasattr(self, 'key_file'):
                         self.key_file = None
@@ -658,7 +674,6 @@ class WSGI_HTTPSConnection(HTTPSConnection, WSGI_HTTPConnection):
                             else:
                                 self._check_hostname = self.check_hostname
                 except (ImportError, AttributeError):
-                    import traceback
                     traceback.print_exc()
                 HTTPSConnection.connect(self)
 
