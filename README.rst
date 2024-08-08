@@ -14,7 +14,7 @@ Supported Libaries
 ==================
 
 ``wsgi_intercept`` works with a variety of HTTP clients in Python 2.7,
-3.5 and beyond, and in pypy.
+3.7 and beyond, and in pypy.
 
 * urllib2
 * urllib.request
