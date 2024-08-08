@@ -30,6 +30,7 @@ def make_urllib3_override(HTTPConnectionPool, HTTPSConnectionPool,
             kwargs.pop('socket_options', None)
             kwargs.pop('key_password', None)
             kwargs.pop('server_hostname', None)
+            kwargs.pop('ssl_context', None)
             if sys.version_info > (3, 12):
                 kwargs.pop('key_file', None)
                 kwargs.pop('cert_file', None)
