@@ -1,4 +1,4 @@
-.PHONY: test clean reclean tagv pypi release docs
+.PHONY: test clean reclean tagv pypi release docs gh
 
 default:
 	@echo "Pick a target (e.g., clean, test)"
@@ -37,4 +37,7 @@ pypi:
 docs:
 	tox -edocs
 
-release: clean test tagv reclean pypi
+release: clean test tagv reclean pypi gh
+
+gh:
+	gh release create v`python setup.py --version` --generate-notes dist/*
