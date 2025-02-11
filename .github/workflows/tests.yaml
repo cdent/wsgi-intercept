@@ -13,8 +13,6 @@ jobs:
                       env: pep8
                     - python: 3.9
                       env: docs
-                    - python: 3.7
-                      env: py37
                     - python: 3.8
                       env: py38
                     - python: 3.9
@@ -25,6 +23,8 @@ jobs:
                       env: py311
                     - python: "3.12"
                       env: py312
+                    - python: "3.13"
+                      env: py313
                     - python: pypy-3.8
                       env: pypy3
         name: ${{ matrix.env }} on Python ${{ matrix.python }}
