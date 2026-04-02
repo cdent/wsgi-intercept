@@ -7,6 +7,8 @@ from httplib2 import Http
 from wsgi_intercept.interceptor import Httplib2Interceptor
 from .wsgi_app import simple_app
 
+host = None
+
 
 def app():
     return simple_app
@@ -23,7 +25,6 @@ def teardown_module(module):
 
 
 def test_simple_request():
-    global host
     http = Http()
     response, content = http.request('http://%s/' % host)
     assert response.status == 200
@@ -31,7 +32,6 @@ def test_simple_request():
 
 
 def test_another_request():
-    global host
     http = Http()
     response, content = http.request('http://%s/foobar' % host)
     assert response.status == 200
