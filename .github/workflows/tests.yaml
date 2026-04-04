@@ -24,7 +24,7 @@ jobs:
                     - python: "3.13"
                       env: py313
                     - python: "3.14"
-                      env: py313
+                      env: py314
                     - python: pypy-3.10
                       env: pypy3
         name: ${{ matrix.env }} on Python ${{ matrix.python }}
