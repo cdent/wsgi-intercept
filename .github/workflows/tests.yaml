@@ -9,12 +9,10 @@ jobs:
         strategy:
             matrix:
                 include:
-                    - python: 3.9
+                    - python: "3.14"
                       env: pep8
-                    - python: 3.9
+                    - python: "3.14"
                       env: docs
-                    - python: 3.8
-                      env: py38
                     - python: 3.9
                       env: py39
                     - python: "3.10"
@@ -25,7 +23,9 @@ jobs:
                       env: py312
                     - python: "3.13"
                       env: py313
-                    - python: pypy-3.8
+                    - python: "3.14"
+                      env: py313
+                    - python: pypy-3.10
                       env: pypy3
         name: ${{ matrix.env }} on Python ${{ matrix.python }}
         steps:

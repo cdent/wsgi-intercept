@@ -22,7 +22,7 @@ reclean:
 	rm -r *-bundle* || true
 
 test:
-	tox --skip-missing-interpreters
+	python3 -m tox --skip-missing-interpreters
 
 tagv:
 	git tag -a \
@@ -35,7 +35,7 @@ pypi:
 	twine upload -s dist/*
 
 docs:
-	tox -edocs
+	python3 -m tox -edocs
 
 release: clean test tagv reclean pypi gh
 
